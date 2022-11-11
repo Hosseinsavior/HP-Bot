@@ -1,2282 +1,3421 @@
-<?php
+<?php 
 
+ob_start();
 
-
-
-error_reporting(0);
-include 'Class.php';
-include 'other/Button.php';
+$API_KEY = '5454621874:AAHgdBetQFuScJxRg9xgsYeuu-9xOFQYv24';
+##------------------------------##
+define('API_KEY',$API_KEY);
+function bot($method,$datas=[]){
+    $url = "https://api.telegram.org/bot".API_KEY."/".$method;
+    $ch = curl_init();
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch,CURLOPT_POSTFIELDS,$datas);
+    $res = curl_exec($ch);
+    if(curl_error($ch)){
+        var_dump(curl_error($ch));
+    }else{
+        return json_decode($res);
+    }
+}
+ function sendmessage($chat_id, $text, $model){
+ bot('sendMessage',[
+ 'chat_id'=>$chat_id,
+ 'text'=>$text,
+ 'parse_mode'=>$mode
+ ]);
+ }
+ function sendphoto($chat_id, $photo, $captionl){
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>$photo,
+ 'caption'=>$caption,
+ ]);
+ }
+ function sendaudio($chat_id, $audio, $caption, $title ,$performer){
+ bot('sendaudio',[
+ 'chat_id'=>$chat_id,
+ 'audio'=>$audio,
+ 'caption'=>$caption,
+ 'title'=>$title,
+ 'performer'=>$performer
+ ]);
+ }
+ function senddocument($chat_id, $document, $caption){
+ bot('senddocument',[
+ 'chat_id'=>$chat_id,
+ 'document'=>$document,
+ 'caption'=>$caption
+ ]);
+ }
+ function sendsticker($chat_id, $sticker){
+ bot('sendsticker',[
+ 'chat_id'=>$chat_id,
+ 'sticker'=>$sticker
+ ]);
+ }
+ function sendvideo($chat_id, $video, $caption){
+ bot('sendvideo',[
+ 'chat_id'=>$chat_id,
+ 'video'=>$video,
+ 'caption'=>$caption
+ ]);
+ }
+ function EditMessageText($chatid,$message_id,$text){
+    bot('editmessagetext',[
+    'chat_id'=>$chatid,
+    'message_id'=>$message_id,
+    'text'=>$text
+    ]);
+}
+ function sendvoice($chat_id, $voice, $caption){
+ bot('sendvoice',[
+ 'chat_id'=>$chat_id,
+ 'voice'=>$voice,
+ 'caption'=>$caption
+ ]);
+ }
+ function sendaction($chat_id, $action){
+ bot('sendchataction',[
+ 'chat_id'=>$chat_id,
+ 'action'=>$action
+ ]);
+ }
+ function objectToArrays($object)
+    {
+        if (!is_object($object) && !is_array($object)) {
+            return $object;
+        }
+        if (is_object($object)) {
+            $object = get_object_vars($object);
+        }
+        return array_map("objectToArrays", $object);
+    }
+//====================Tikapp======================//
 $update = json_decode(file_get_contents('php://input'));
-mkdir("data");
-mkdir("other/access");
-mkdir("other/button");
-mkdir("other/button/caption");
-mkdir("other/button/feed");
-mkdir("other/button/file");
-mkdir("other/button/forward");
-mkdir("other/button/music");
-mkdir("other/button/photo");
-mkdir("other/button/sticker");
-mkdir("other/button/text");
-mkdir("other/button/video");
-mkdir("other/button/voice");
-mkdir("other/profile");
-mkdir("other/setting");
-mkdir("other/wordlist");
-$class = file_get_contents("other/Button.php");
-$ccontact = $update->message->contact;
-$locationn = $update->message->location;
-$tp = file_get_contents("data/bottype.txt");
-$data = $update->callback_query->data;
-$data_id = $update->callback_query->id;
+include("jdf.php");
+$date =  jdate('d');
+$fasl =  jdate('f');
+$h =  jdate('G:i:s');
+$m = jdate('q');
+$s = jdate('s');
+$hafte = jdate('l');
+$y = jdate('Y');
+$l = jdate('Y/n/j');
+$mo =  jdate('F');
+$q =  jdate('Q');
+$message = $update->message;
+$from_id = $message->from->id;
+$chat_id = $message->chat->id;
+$first_name = $message->from->first_name;
+$last_name = $message->from->last_name;
+$username = $message->from->username;
+$text = $message->text;
 $chatid = $update->callback_query->message->chat->id;
-$chat_id = $update->message->chat->id;
-$title = $update->message->chat->title;
-$fromid = $update->callback_query->message->from->id;
-$from_id = $update->message->from->id;
-$type = $update->message->chat->type;
-$txttt = file_get_contents('other/access/Member.txt');
-$member_id1 = explode("\n",$txttt);
-$mmemcount1 = count($member_id1) -1;
-$first = $update->message->from->first_name;
-$last = $update->message->from->last_name;
-$username = $update->message->from->username;
-$text = $update->message->text;
-$text_call = $update->callback_query->message->text;
-$message_id_call = $update->callback_query->message->message_id;
-$forward_from_chat = $update->message->forward_from_chat;
-$from_chat_title = $forward_from_chat->title;
-$from_chat_id = $forward_from_chat->id;
-$from_chat_username = $forward_from_chat->username;
-$from_chat_type = $forward_from_chat->type;
-$message_id = $update->message->message_id;
-$command = file_get_contents("other/command.txt");
-$wait = file_get_contents("other/wait.txt");
-$iduser = file_get_contents("other/id.txt");
-$url_s2a = file_get_contents("other/url_s2a.txt");
-$text_s2a = file_get_contents("other/text_s2a.txt");
-$tin=file_get_contents("https://Api.eliyateam.ir/old/time.php");
-$timee=json_decode($tin,true);
+$data = $update->callback_query->data;
+$message_id = $update->callback_query->message->message_id;
+$reply = $update->message->reply_to_message;
+@$ali = file_get_contents("ali.txt");
+@$hossein = file_get_contents("hossein.txt");
+@$dataa = json_decode(file_get_contents("data.json"), true);
+$tin = file_get_contents("https://Api.eliyateam.ir/old/time.php");
+$timee = json_decode($tin, true);
 $time = $timee["FAtime"];
 $date = $timee["FAdate"];
-$adminlist = file_get_contents("other/access/AdminList.txt");
-$block = file_get_contents("other/access/Block-List.txt");
-$chat = file_get_contents("other/access/Chat.txt");
-$banall = file_get_contents("administrative/banall-member/banall.txt");
-@$list = json_decode(file_get_contents("data/list.json"),true);
-@$alidata = json_decode(file_get_contents("data/data.json"),true);
-$sticker_id = $update->message->sticker->file_id;
-$video_id = $update->message->video->file_id;
-$voice_id = $update->message->voice->file_id;
-$file_id = $update->message->document->file_id;
-$music_id = $update->message->audio->file_id;
-$photo2_id = $update->message->photo[2]->file_id;
-$photo1_id = $update->message->photo[1]->file_id;
-$photo0_id = $update->message->photo[0]->file_id;
-$cnumber = $update->message->contact->phone_number;
-$cname = $update->message->contact->first_name;
-$contact_number = $update->message->contact;
-$forward_from = $update->message->forward_from;
-$forward_from_id = $forward_from->id;
-$reply = $update->message->reply_to_message->forward_from->id;
-$reply_username = $update->message->reply_to_message->forward_from->username;
-$reply_first = $update->message->reply_to_message->forward_from->first_name;
-$last = $update->message->from->last_name;
-$inline = $update->inline_query;
-$inline_text = $update->inline_query->query;
-$caption = $update->message->caption;
-$ads_msg_id  = file_get_contents("administrative/access/forward-msg-id.txt");
-$ads_id = file_get_contents("administrative/access/forward-id.txt");
-//========
-$_sticker = file_get_contents("other/button/sticker/$text.txt");
-$_video = file_get_contents("other/button/video/$text.txt");
-$_voice = file_get_contents("other/button/voice/$text.txt");
-$_file = file_get_contents("other/button/file/$text.txt");
-$_music = file_get_contents("other/button/music/$text.txt");
-$_photo = file_get_contents("other/button/photo/$text.txt");
-$_rss = file_get_contents("other/button/feed/$text.txt");
-$channel_lock = file_get_contents("other/setting/channel_lock.txt");
-$_word = file_get_contents("other/wordlist/$text.txt");
-$_word = str_replace("FIRSTNAME",$first,$_word);
-$_word = str_replace("LASTNAME",$last,$_word);
-$_word = str_replace("USERID",$from_id,$_word);
-$_word = str_replace("USERNAME",$username,$_word);
-$_word = str_replace("DATE",$date,$_word);
-$_word = str_replace("TIME",$time,$_word);
-$_caption = file_get_contents("other/button/caption/$text.txt");
-$_caption = str_replace("FIRSTNAME",$first,$_caption);
-$_caption = str_replace("LASTNAME",$last,$_caption);
-$_caption = str_replace("USERID",$from_id,$_caption);
-$_caption = str_replace("USERNAME",$username,$_caption);
-$_caption = str_replace("DATE",$date,$_caption);
-$_caption = str_replace("TIME",$time,$_caption);
-$_forward = file_get_contents("other/button/forward/$text.txt");
-$_text = file_get_contents("other/button/text/$text.txt");
-$_text = str_replace("FIRSTNAME",$first,$_text);
-$_text = str_replace("LASTNAME",$last,$_text);
-$_text = str_replace("USERID",$from_id,$_text);
-$_text = str_replace("USERNAME",$username,$_text);
-$_text = str_replace("DATE",$date,$_text);
-$_text = str_replace("TIME",$time,$_text);
-// Chack
-$_send = file_get_contents("other/setting/send.txt");
-$_send = str_replace("FIRSTNAME",$first,$_send);
-$_send = str_replace("USERID",$from_id,$_send);
-$_send = str_replace("USERNAME",$username,$_send);
-$_send = str_replace("DATE",$date,$_send);
-$_send = str_replace("TIME",$time,$_send);
-$_start = file_get_contents("other/setting/start.txt");
-$_start = str_replace("FIRSTNAME",$first,$_start);
-$_start = str_replace("LASTNAME",$last,$_start);
-$_start = str_replace("USERID",$from_id,$_start);
-$_start = str_replace("USERNAME",$username,$_start);
-$_start = str_replace("DATE",$date,$_start);
-$_start = str_replace("TIME",$time,$_start);
-$_number = file_get_contents("other/setting/number.txt");
-$_cname = file_get_contents("other/setting/cname.txt");
-$_feed = file_get_contents("other/setting/feed.txt");
-// Check
-// Check
-$_name = file_get_contents("other/profile/name.txt");
-$_age = file_get_contents("other/profile/age.txt");
-$_location = file_get_contents("other/profile/location.txt");
-$_tah = file_get_contents("other/profile/tah.txt");
-$_phone = file_get_contents("other/profile/phone.txt");
-$_stats = file_get_contents("other/profile/stats.txt");
-$_insta = file_get_contents("other/profile/insta.txt");
-$_channel = file_get_contents("other/profile/channel.txt");
-$_site = file_get_contents("other/profile/site.txt");
-$_block = file_get_contents("block.txt");
-$truechannel1 = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/getChatMember?chat_id=$channel_lock&user_id=$from_id"));
-$tch1 = $truechannel1->result->status;
-$ban_all = file_get_contents("administrative/user/banall.txt");
+@$year = file_get_contents("data/year.txt");
+@$month = file_get_contents("data/month.txt");
+@$day = file_get_contents("data/day.txt");
+$ADMIN = 5059280908;
+$abzar = json_encode
+(['resize_keyboard' => true,
+    'inline_keyboard'=>[
+[['text'=>"اینستادانلودر۱⁦✴️⁩",'callback_data'=>"insta1"]],
+[['text'=>"اینستادانلودر۲💫",'callback_data'=>"insta2"],
+['text'=>"یوتیوب دانلودر💥",'callback_data'=>"yout"]],
+[['text'=>"دریافت پروکسی⁦🕸️⁩",'callback_data'=>"proxygive"],
+['text'=>"واژه یاب⁦🗞️⁩",'callback_data'=>"vajeh"]]  , 
+[['text'=>"عکس زمینه⁦♨️⁩",'callback_data'=>"ax"],
+['text'=>"نرخ ارز و طلا💰",'callback_data'=>"arzotala"]]  ,
+[['text'=>"نرخ خودرو🚗",'callback_data'=>"khodro"],
+['text'=>"نرخ موبایل📱",'callback_data'=>"mobne"]],
+[['text'=>"خبرگزاری جوان💠",'callback_data'=>"khabar"],
+ ['text'=>"تاریخ و زمان🕔",'callback_data'=>"zaman"]],
+[['text'=>"🔄تبدیلگر🔄⁩",'callback_data'=>"tabdilgar"],
+['text'=>"دانلود برنامه 📡",'callback_data'=>"apk"]],
+[['text'=>"اطلاعات تولد🤰",'callback_data'=>"tavalod"],
+['text'=>"فال حافظ🌟",'callback_data'=>"fal"]], [['text'=>"فیلمکده⁦📽️⁩",'callback_data'=>"filmkadeh"],
+['text'=>"موزیک ویدئو🎬⁩",'callback_data'=>"moozik"]],
+[['text'=>"اطلاعات فنی موبایل📵",'callback_data'=>"mobet"]],
+]]);
+$arzotala = json_encode(['resize_keyboard' => true, 'inline_keyboard' => [
 
-if (strpos($banall , "$from_id") !== false) {
-	return false;
-	}
-	elseif (strpos($block , "$from_id") !== false) {
-	return false;
-	}
-	elseif($chat_id != $from_id && $join == "⛔️" && $chat_id != $_feed){
-	LeaveChat($chat_id);
-	}
-	elseif($on_off == 'false' and $from_id != $admin){
-	
-	SendMessage($chat_id,"⛔️ دوست عزیز ربات خاموش میباشد صبر کنید تا توسط ادمین ربات روشن شود.دوباره پیام خود را ارسال کنید.","html","true",$button_remove);
-	}
-	elseif($text == '/unblock' and $from_id == $admin1 | $from_id == $admin2 | $from_id == $admin3){
-	unlink("block.txt");
-	
-	SendMessage($chat_id,"<i>ربات انبلاک شد:</i>","html","true",$button_remove);
-	}
-	elseif($_block == 'true'){
-	
-	SendMessage($chat_id,"<i>ربات بدلیل رعایت نکردن قوانین بلاک میباشد.
-	برای انبلاک کردن ربات به آدرس زیر مراجعه کنید:</i>","html","true",$button_remove);
-	}
-	elseif (strpos($banall , "$from_id") !== false  ) {
-  SendMessage($chat_id,"*You Are GloballyBanned From Server.❌
-Don't Message Again...❌*
-➖➖➖➖➖➖➖➖➖➖`
-دسترسی شما به این سرور مسدود شده است.❌
-لطفا پیام ندهید...❌`");
- }
-	elseif($text == '/block' and $from_id == $admin1 | $from_id == $admin2 | $from_id == $admin3){
-	save("block.txt",'true');
-	
-	SendMessage($chat_id,"<i>ربات بلاک شد:</i>","html","true",$button_remove);
-	}
+[['text' => "نرخ طلا💰", 'callback_data' => "tala"]],
+[['text' => "نرخ ارز💵", 'callback_data' => "arz"]],
+]]);
+$bargasht = json_encode
+(['resize_keyboard' => true,
+'inline_keyboard'=>[
+[['text' => "بازگشت↩️", 'callback_data' => "ab"]],
+]]);
+//====================Tikapp======================//
+if(preg_match('/^\/([Ss]tart)/',$text)){
+$user = file_get_contents('Member.txt');
+    $members = explode("\n",$user);
+    if (!in_array($chat_id,$members)){
+      $add_user = file_get_contents('Member.txt');
+      $add_user .= $chat_id."\n";
+     file_put_contents('Member.txt',$add_user);
+    }
+sendaction($chat_id, typing);
+bot('sendmessage', [
+                'chat_id' => $chat_id,
+                'text' =>"سلام کاربر عزیز👋
 
-elseif($tch1 != 'member' && $tch1 != 'creator' && $tch1 != 'administrator' and $from_id != $admin | strpos($adminlist , "$from_id") == false and $channel_lock != null){
-	
-	SendMessage($chat_id,"دوست عزیز برای استفاده از ربات و همچنان حمایت از ما لطفا وارد کانال
-➡ $channel_lock
-شوید و join رو بزنید و سپس به ربات برگشته و دوباره ربات را /start کنید.","html","true",$button_remove);
+به ربات خودتون خوش اومدین",
+                'parse_mode'=>$mode,
+      'reply_markup'=>$abzar]);
+      
 }
-	//===========
-	elseif($inline != null){		
-	$protxt = '';
-	if ($_name == ''){
-	$protxt = "📬پروفایل خالی است ...";
-	}
-	elseif ($_name != ''){
-		$protxt = $_name;
-	}if ($_age != ''){
-		$protxt = $protxt."\n".$_age.' ساله';
-	}if ($_location != ''){
-		$protxt = $protxt."\nاز ".$_location;
-	}if ($_tah != ''){
-		  $protxt = $protxt."\n".$_tah;
-	}if ($_stats != ''){
-		  $protxt = $protxt."\n".$_stats;
-	}if ($_phone != ''){
-		  $protxt = $protxt."\n<b>Tel:</b> ".$_phone;
-	}if ($_insta != ''){
-		  $protxt = $protxt."\n<b>insta:</b> ".$_insta;
-	}if ($_channel != ''){
-		 $protxt = $protxt."\n<b>Channel:</b> ".$_channel;
-	}if ($_site != ''){
-		  $protxt = $protxt."\n<b>Site:</b> ".$_site;
-	}
-  bot('answerInlineQuery',[
-      'inline_query_id'=>$update->inline_query->id,
-      'cache_time' => 1,
-      'results'=>json_encode([
-		[
-          'type'=>'article',
-          'id'=>base64_encode(1),
-          'title'=>'ارسال مشخصات',
-		  'description'=>$protxt,
-		  'input_message_content'=>[
-		  'message_text'=>$protxt,
-		  "parse_mode"=>"html"
-		  ],
-		  'thumb_url'=>'http://s8.picofile.com/file/8280811234/download.png'
-        ],
-      ])
+
+//====================Tikapp======================//
+ elseif($text == "/panel" && $from_id == $ADMIN){
+sendaction($chat_id, typing);
+      bot('sendMessage',[
+ 'chat_id'=>$chat_id,
+ 'text'=>"ادمین عزیز به پنل مدیریتی ربات خودش امدید",
+                'parse_mode'=>'html',
+      'reply_markup'=>json_encode([
+            'keyboard'=>[
+              [
+              ['text'=>"آمار"],['text'=>"پیام همگانی"]
+              ],
+              ],'resize_keyboard'=>true
+        ])
+            ]);
+        }
+elseif($text == "آمار" && $from_id == $ADMIN){
+ sendaction($chat_id,'typing');
+    $user = file_get_contents("Member.txt");
+    $member_id = explode("\n",$user);
+    $member_count = count($member_id) -1;
+ sendmessage($chat_id , " آمار کاربران : $member_count" , "html");
+}
+elseif($text == "پیام همگانی" && $from_id == $ADMIN){
+    file_put_contents("ali.txt","bc");
+ sendaction($chat_id,'typing');
+ bot('sendmessage',[
+    'chat_id'=>$chat_id,
+    'text'=>" پیام مورد نظر رو در قالب متن بفرستید:",
+    'parse_mode'=>'html',
+    'reply_markup'=>json_encode([
+      'keyboard'=>[
+   [['text'=>'/panel']],
+      ],'resize_keyboard'=>true])
+  ]);
+}
+elseif($ali == "bc" && $from_id == $ADMIN){
+    file_put_contents("ali.txt","none");
+ SendAction($chat_id,'typing');
+ bot('sendmessage',[
+    'chat_id'=>$chat_id,
+    'text'=>" پیام همگانی فرستاده شد.",
+  ]);
+ $all_member = fopen( "Member.txt", "r");
+  while( !feof( $all_member)) {
+    $user = fgets( $all_member);
+   SendMessage($user,$text,"html");
+  }
+}
+//====================Tikapp======================//
+
+   elseif($data == "apk"){
+   file_put_contents("ali.txt","apk");
+bot('editmessagetext',[
+   'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+       'text'=>"💥 نام برنامه ی مورد نظر را ارسال کنید  : 
+        
+        
+        
+        💥
+    زمان : $time
+    تاریخ : $date", 'parse_mode'=>"html",'reply_markup'=>$bargasht]);}
+    elseif($ali == "apk"){ 
+    file_put_contents("ali.txt","No");
+    file_put_contents("ali.txt","apkdan");
+    
+    $kama = $message->text;
+    $get = file_get_contents("https://api.hajiapi.tk/bazar?type=search&q=$kama");
+
+
+    $result = json_decode($get, true);
+    $apk = $result['result']['1']['name'];
+    $apk1 = $result['result']['1']['packageName'];
+    $apk2 = $result['result']['2']['name'];
+    $apk3 = $result['result']['2']['packageName'];
+    $apk4 = $result['result']['3']['name'];
+    $apk5 = $result['result']['3']['packageName'];
+    $apk6 = $result['result']['4']['name'];
+    $apk7 = $result['result']['4']['packageName'];
+    $apk8 = $result['result']['5']['name'];
+    $apk9 = $result['result']['5']['packageName'];
+    $apk10 = $result['result']['6']['name'];
+    $apk11 = $result['result']['6']['packageName'];
+    $apk12 = $result['result']['7']['name'];
+    $apk13 = $result['result']['7']['packageName'];
+    $apk14 = $result['result']['8']['name'];
+    $apk15 = $result['result']['8']['packageName'];
+sendaction($chat_id,typing);
+sendmessage($chat_id, "💥آیدی برنامه مورد نظر را کپی کرده و ارسال کنید💥
+
+نام برنامه : $apk
+
+آیدی برنامه : $apk1","html", "true" );
+
+sendmessage($chat_id,"
+نام برنامه : $apk2
+
+آیدی برنامه : $apk3","html", "true" );
+
+sendmessage($chat_id,"
+نام برنامه : $apk4
+
+آیدی برنامه : $apk5","html", "true" );
+
+sendmessage($chat_id, "
+نام برنامه : $apk6
+
+آیدی برنامه : $apk7","html", "true" );
+
+sendmessage($chat_id,"
+نام برنامه : $apk8
+
+آیدی برنامه : $apk9","html", "true" );
+
+sendmessage($chat_id,"
+نام برنامه : $apk10
+
+آیدی برنامه : $apk11","html", "true" );
+
+sendmessage($chat_id,"
+نام برنامه : $apk12
+
+آیدی برنامه : $apk13","html", "true" );
+sendmessage($chat_id,"
+نام برنامه : $apk14
+
+آیدی برنامه : $apk15
+___________________________
+آیدی برنامه مورد نظر را کپی و ارسال کنید 
+@SaviorisGod_bot", "html", "true" );
+}
+elseif($ali == "apkdan"){ 
+    
+   file_put_contents("ali.txt","No"); 
+
+    $barna = $message->text;
+
+    $get = file_get_contents("https://api.hajiapi.tk/bazar/download.php?packagename=$barna");
+
+    $result = json_decode($get, true);
+
+    $apn = $result['data']['packagename'];
+    $apn1 = $result['data']['downloadLink'];
+    $apn2 = $result['data']['appsize'];
+   
+$long_url = urlencode ("$apn1");
+
+    $api_token = '540b1808cc621c989aab1863f1e178de05fb566c';
+
+    $api_url = "https://1da.ir/api?api={$api_token}&url={$long_url}&alias=CustomAlias&format=text";
+    
+$abbas = @file_get_contents($api_url);
+sendaction($chat_id,typing);
+sendmessage($chat_id,"
+ https://cafebazaar.ir
+
+ 
+   💥 نام پکیج : $apn
+   
+   💥 حجم برنامه :$apn2
+   
+   ✴️ لینک دانلود  : $abbas
+   
+   
+
+اکنون : $time
+
+امروز : $date","html","true");
+}
+
+
+    elseif($data == "mobet"){ 
+   file_put_contents("ali.txt","mobet");
+bot('editmessagetext',[
+   'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+       'text'=>"💯نام مدل گوشی همراه را ارسال کنید مثال : 
+       
+       huawei+P30
+       
+       یا 
+       
+       
+       samsung+j7",
+       
+           'parse_mode'=>"html",'reply_markup'=>$bargasht]);}
+           
+           
+           
+    elseif($ali == "mobet"){ 
+    file_put_contents("ali.txt","No");
+    file_put_contents("ali.txt","mobilebaz");
+    
+    
+    $vita = $message->text;
+    $get = file_get_contents("http://Api.eliyateam.ir/gsm.php?type=search&q=$vita");
+
+    $result = json_decode($get, true);
+
+    $fan = $result['Result']['1']['code'];
+    $fan1 = $result['Result']['1']['image'];
+    $fan2 = $result['Result']['1']['Name'];
+    $fan3 = $result['Result']['2']['code'];
+    $fan4 = $result['Result']['2']['image'];
+    $fan5 = $result['Result']['2']['Name'];
+    $fan6 = $result['Result']['3']['code'];
+    $fan7 = $result['Result']['3']['image'];
+    $fan8 = $result['Result']['3']['Name'];
+    $fan9 = $result['Result']['4']['code'];
+    $fan10 = $result['Result']['4']['image'];
+    $fan11 = $result['Result']['4']['Name'];
+    $fan12 = $result['Result']['5']['code'];
+    $fan13 = $result['Result']['5']['image'];
+    $fan14 = $result['Result']['5']['Name'];
+    $fan15 = $result['Result']['6']['code'];
+    $fan16 = $result['Result']['6']['image'];
+    $fan17 = $result['Result']['6']['Name'];
+    $fan18 = $result['Result']['7']['code'];
+    $fan19 = $result['Result']['7']['image'];
+    $fan20 = $result['Result']['7']['Name'];
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan1",
+    'caption'=>"نام : $fan2"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan4",
+    'caption'=>"نام : $fan5"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan3", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan7",
+    'caption'=>"نام : $fan8"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan6", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan10",
+    'caption'=>"نام : $fan11"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan9", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan13",
+    'caption'=>"نام : $fan14"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan12", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan16",
+    'caption'=>"نام : $fan17"]);
+
+
+
+    sendmessage($chat_id, "
+
+کد گوشی : $fan15", "html", "true"
+    );
+
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$fan19",
+    'caption'=>"نام : $fan20"]);
+
+sendmessage($chat_id, "
+
+کد گوشی : $fan18", "html", "true");
+
+sendmessage($chat_id,"♐ کد گوشی مورد نظر را کپی کرده و ارسال کنید ♐","html","true");}
+
+
+elseif($ali == "mobilebaz"){ 
+    
+file_put_contents("ali.txt","No");
+    
+    $jira = $message->text;
+
+    $get = file_get_contents("http://Api.eliyateam.ir/gsm.php?type=getdata&code=$jira");
+
+    $result = json_decode($get, true);
+    $go = $result['name'];
+    $go1 = $result['displaysize'];
+    $go2 = $result['displayres'];
+    $go3 = $result['camerapixels'];
+    $go4 = $result['videopixels'];
+    $go5 = $result['ramsize'];
+    $go6 = $result['chipset'];
+    $go7 = $result['batsize'];
+    $go8 = $result['battype'];
+    $go9 = $result['released'];
+    $go10 = $result['body'];
+    $go11 = $result['os'];
+    $go12 = $result['storage'];
+
+   sendaction($chat_id,typing);
+   
+   bot('sendmessage',[
+    'chat_id'=>$chat_id,
+    'text'=>"
+  
+● $go ->اسم کامل موبایل
+
+○ $go1 -> اندازه نمایشگر به اینچ
+
+● $go2 -> پیکسل نمایشگر
+
+○ $go3 -> کیفیت عکس
+
+● $go4 -> کیفیت فیلم
+
+○ $go5 -> حجم رم
+
+● $go6 -> اطلاعات رم
+
+○ $go7 -> مخزن باتری
+
+● $go8->نوع باتری
+
+○ $go9 -> تاریخ انتشار
+
+● $go10 ->اطلاعات بدنه
+
+○ $go11-> سیستم عامل
+
+● $go12-> حافظه "]);
+}
+elseif($data == "arzotala"){
+     bot('editmessagetext',[
+   'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+ 'text'=>"🌟یکی از گزینه ها را انتخاب کنید 🌟",
+  'parse_mode'=>"MarkDown",
+      'reply_markup'=>$arzotala]);
+}
+elseif($data == "arz"){ 
+    
+    file_put_contents("data.json",json_encode($dataa));
+    
+$get = file_get_contents("https://api.codebazan.ir/arz/?type=arz");
+$result= json_decode($get,true);
+$in1=$result['Result']['0']['name'];
+$in2=$result['Result']['0']['low'];
+$in3=$result['Result']['0']['High'];
+$in4=$result['Result']['0']['update'];
+
+$in5=$result['Result']['1']['name'];
+$in6=$result['Result']['1']['low'];
+$in7=$result['Result']['1']['High'];
+$in8=$result['Result']['1']['update'];
+
+$in9=$result['Result']['2']['name'];
+$in10=$result['Result']['2']['low'];
+$in11=$result['Result']['2']['High'];
+$in12=$result['Result']['2']['update'];
+
+$in13=$result['Result']['3']['name'];
+$in14=$result['Result']['3']['low'];
+$in15=$result['Result']['3']['High'];
+$in16=$result['Result']['3']['update'];
+
+$in17=$result['Result']['4']['name'];
+$in18=$result['Result']['4']['low'];
+$in19=$result['Result']['4']['High'];
+$in20=$result['Result']['4']['update'];
+
+$in21=$result['Result']['5']['name'];
+$in22=$result['Result']['5']['low'];
+$in23=$result['Result']['5']['High'];
+$in24=$result['Result']['5']['update'];
+
+$in25=$result['Result']['6']['name'];
+$in26=$result['Result']['6']['low'];
+$in27=$result['Result']['6']['High'];
+$in28=$result['Result']['6']['update'];
+
+$in29=$result['Result']['7']['name'];
+$in30=$result['Result']['7']['low'];
+$in31=$result['Result']['7']['High'];
+$in32=$result['Result']['7']['update'];
+
+$in33=$result['Result']['15']['name'];
+$in34=$result['Result']['15']['low'];
+$in35=$result['Result']['15']['High'];
+$in36=$result['Result']['15']['update'];
+
+$in37=$result['Result']['31']['name'];
+$in38=$result['Result']['31']['low'];
+$in39=$result['Result']['31']['High'];
+$in40=$result['Result']['31']['update'];
+    
+    bot('editmessagetext', [
+ 'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+ 'text'=>"🌟 
+
+نام ارز : $in1
+
+پایین ترین قیمت : $in2
+
+
+بالاترین قیمت : $in3
+
+
+تاریخ : $in4
+____________________________ 
+
+
+نام ارز : $in5
+
+
+پایین ترین قیمت : $in6
+
+
+بالاترین قیمت : $in7
+
+
+تاریخ : $in8
+____________________________ 
+
+
+نام ارز : $in9
+
+پایین ترین قیمت : $in10
+
+
+بالاترین قیمت : $in11
+
+
+تاریخ : $in12
+____________________________ 
+
+
+نام ارز : $in13
+
+پایین ترین قیمت : $in14
+
+
+بالاترین قیمت : $in15
+
+
+تاریخ : $in16
+____________________________ 
+
+
+نام ارز : $in17
+
+
+پایین ترین قیمت : $in18
+
+
+بالاترین قیمت : $in19
+
+
+تاریخ : $in20
+____________________________ 
+
+
+نام ارز : $in21
+
+
+پایین ترین قیمت : $in22
+
+
+بالاترین قیمت : $in23
+
+
+تاریخ : $in24
+____________________________ 
+
+
+نام ارز : $in25
+
+
+پایین ترین قیمت : $in26
+
+
+بالاترین قیمت : $in27
+
+
+تاریخ : $in28
+____________________________ 
+
+
+نام ارز : $in29
+
+
+پایین ترین قیمت : $in30
+
+
+بالاترین قیمت : $in31
+
+
+تاریخ : $in32
+____________________________ 
+
+نام ارز : $in33
+
+
+پایین ترین قیمت : $in34
+
+
+بالاترین قیمت : $in35
+
+
+تاریخ : $in36
+____________________________ 
+
+
+نام ارز : $in37
+
+
+پایین ترین قیمت : $in38
+
+
+بالاترین قیمت : $in39
+
+
+تاریخ : $in40",
+  'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht]);
+}
+
+elseif($data == "tala"){ 
+    
+    file_put_contents("data.json",json_encode($dataa));
+    
+$get = file_get_contents("https://api.codebazan.ir/arz/?type=tala");
+$result= json_decode($get,true);
+$in1=$result['Result']['0']['name'];
+$in2=$result['Result']['0']['low'];
+$in3=$result['Result']['0']['High'];
+$in4=$result['Result']['0']['update'];
+
+$in5=$result['Result']['1']['name'];
+$in6=$result['Result']['1']['low'];
+$in7=$result['Result']['1']['High'];
+$in8=$result['Result']['1']['update'];
+
+$in9=$result['Result']['2']['name'];
+$in10=$result['Result']['2']['low'];
+$in11=$result['Result']['2']['High'];
+$in12=$result['Result']['2']['update'];
+
+$in13=$result['Result']['3']['name'];
+$in14=$result['Result']['3']['low'];
+$in15=$result['Result']['3']['High'];
+$in16=$result['Result']['3']['update'];
+
+$in17=$result['Result']['4']['name'];
+$in18=$result['Result']['4']['low'];
+$in19=$result['Result']['4']['High'];
+$in20=$result['Result']['4']['update'];
+
+$in21=$result['Result']['5']['name'];
+$in22=$result['Result']['5']['low'];
+$in23=$result['Result']['5']['High'];
+$in24=$result['Result']['5']['update'];
+
+$in25=$result['Result']['6']['name'];
+$in26=$result['Result']['6']['low'];
+$in27=$result['Result']['6']['High'];
+$in28=$result['Result']['6']['update'];
+
+$in29=$result['Result']['7']['name'];
+$in30=$result['Result']['7']['low'];
+$in31=$result['Result']['7']['High'];
+$in32=$result['Result']['7']['update'];
+
+$in33=$result['Result']['15']['name'];
+$in34=$result['Result']['15']['low'];
+$in35=$result['Result']['15']['High'];
+$in36=$result['Result']['15']['update'];
+
+$in37=$result['Result']['31']['name'];
+$in38=$result['Result']['31']['low'];
+$in39=$result['Result']['31']['High'];
+$in40=$result['Result']['31']['update'];
+    
+    bot('editmessagetext', [
+ 'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+ 'text'=>"🌟 
+
+نام  : $in1
+
+پایین ترین قیمت : $in2
+
+
+بالاترین قیمت : $in3
+
+
+تاریخ : $in4
+____________________________ 
+
+
+نام  : $in5
+
+
+پایین ترین قیمت : $in6
+
+
+بالاترین قیمت : $in7
+
+
+تاریخ : $in8
+____________________________ 
+
+
+نام  : $in9
+
+پایین ترین قیمت : $in10
+
+
+بالاترین قیمت : $in11
+
+
+تاریخ : $in12
+____________________________ 
+
+
+نام  : $in13
+
+پایین ترین قیمت : $in14
+
+
+بالاترین قیمت : $in15
+
+
+تاریخ : $in16
+____________________________ 
+
+
+نام  : $in17
+
+
+پایین ترین قیمت : $in18
+
+
+بالاترین قیمت : $in19
+
+
+تاریخ : $in20
+____________________________ 
+
+
+نام  : $in21
+
+
+پایین ترین قیمت : $in22
+
+
+بالاترین قیمت : $in23
+
+
+تاریخ : $in24
+____________________________ 
+
+
+نام  : $in25
+
+
+پایین ترین قیمت : $in26
+
+
+بالاترین قیمت : $in27
+
+
+تاریخ : $in28
+____________________________ 
+
+
+نام  : $in29
+
+
+پایین ترین قیمت : $in30
+
+
+بالاترین قیمت : $in31
+
+
+تاریخ : $in32
+____________________________ 
+
+نام  : $in33
+
+
+پایین ترین قیمت : $in34
+
+
+بالاترین قیمت : $in35
+
+
+تاریخ : $in36
+____________________________ 
+
+
+نام  : $in37
+
+
+پایین ترین قیمت : $in38
+
+
+بالاترین قیمت : $in39
+
+
+تاریخ : $in40",
+  'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht]);
+}
+elseif($data == "fal"){
+    file_put_contents("ali.txt","none");
+  $pic = "http://www.beytoote.com/images/Hafez/".rand(1, 149).".gif";
+  bot('sendphoto',[
+      'chat_id',$chat_id,
+      'photo'=>"$pic",
+      'caption'=>
+   "این هم فال حافظ تقدیم ب شما 💖"]);
+
+}
+
+  elseif($data == "filmkadeh"){ 
+      
+  bot('editmessagetext' ,[
+    'chat_id'=>$chatid,
+    'message_id'=>$message_id,
+   'text'=> "💎یکی از دو وبسرویس زیر را انتخاب کنید💎 ",'parse_mode'=>"html",'reply_markup'=>json_encode
+   (['resize_keyboard'=>true,
+   'inline_keyboard'=>[
+  [['text'=>" 🎬 فیلمکده ۱",'callback_data'=>"filmk"]],[['text'=>"🎬 فیلمکده ۲",'callback_data'=>"filmnama"]],
+  ]])
+  ]);
+  }
+  
+elseif ($data == "filmnama") {
+   file_put_contents("ali.txt","filmnama");
+    bot('editmessagetext' ,[
+    'chat_id'=>$chatid,
+    'message_id'=>$message_id,
+   'text'=> "🔷نام فیلم مورد نظر را ارسال کنید همچنین میتوانید
+   یک کلمه از نام فیلم مورد نظر خود را ارسال کنید
+   
+    مثال :spider 
+    , scape🔷 ", 'parse_mode'=> "html",'reply_markup'=>$bargasht]);
+} 
+
+elseif ($ali == "filmnama") {
+  file_put_contents("ali.txt","No");
+  file_put_contents("ali.txt","flamingo");
+  
+  $sama = $message->text;
+
+    $get = file_get_contents("https://haji-api.ir/mobomoviez?type=search&q=$sama");
+
+    $result = json_decode($get, true);
+    $film = $result['result']['1']['name'];
+    $film1 = $result['result']['1']['image'];
+    $film2 = $result['result']['1']['id'];
+    $film3 = $result['result']['2']['name'];
+    $film4 = $result['result']['2']['image'];
+    $film5 = $result['result']['2']['id'];
+    $film6 = $result['result']['3']['name'];
+    $film7 = $result['result']['3']['image'];
+    $film8 = $result['result']['3']['id'];
+    $film9 = $result['result']['4']['name'];
+    $film10 = $result['result']['4']['image'];
+    $film11 = $result['result']['4']['id'];
+    $film12 = $result['result']['5']['name'];
+    $film13 = $result['result']['5']['image'];
+    $film14 = $result['result']['5']['id'];
+    $film15 = $result['result']['6']['name'];
+    $film16 = $result['result']['6']['image'];
+    $film17 = $result['result']['6']['id'];
+sendaction($chat_id,typing);
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film1",
+    'caption'=>"$film"]);
+
+
+
+    sendmessage($chat_id, "
+
+ID:👉 $film2", "html", "true"
+    );
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film4",
+    'caption'=>"$film3"]);
+
+    sendmessage($chat_id, "
+
+
+ID:👉 $film5", "html", "true"
+    );
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film7",
+    'caption'=>"$film6"]);
+
+    sendmessage($chat_id, "
+
+
+
+ID:👉 $film8", "html", "true"
+    );
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film10",
+    'caption'=>"$film9"]);
+
+    sendmessage($chat_id, "
+
+
+ID:👉 $film11", "html", "true"
+    );
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film13",
+    'caption'=>"$film12"]);
+
+    sendmessage($chat_id, "
+
+ID:👉 $film14", "html", "true"
+    );
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$film16",
+    'caption'=>"$film15"]);
+
+
+    sendmessage($chat_id, "
+
+ID:👉 $film17", "html", "true"
+    );
+    sendmessage($chat_id, "
+    💥آیدی فیلم مورد نظر رو کپی و ارسال کنید تا لینک دانلود براتون ارسال بشه💥 ", "html", "true"
+    );
+}
+elseif( $ali == "flamingo⁩"){  
+  
+  file_put_contents("ali.txt","No");
+
+    $hoss=$message->text;
+    
+    $get = file_get_contents("https://haji-api.ir/mobomoviez?type=get&q=$hoss");
+    
+ $result = json_decode($get,true);
+ $ghol = $result['title'];
+ $ghol1 =$result['image'];
+ $ghol2 = $result['duration'];
+ $ghol3 = $result['language'];
+ $ghol4 = $result['date'];
+$farsi=$result['score']['imdb'];
+$fars1 = $result['result']['1']['link'];
+$fars3 = $result['result']['1']['resolution'];
+$fars5 = $result['result']['1']['play_online'];
+$fars2 = $result['result']['2']['link'];
+$fars6 = $result['result']['2']['resolution'];
+$fars8 = $result['result']['2']['play_online'];
+$fars9 = $result['result']['3']['resolution'];
+$fars10 = $result['result']['3']['link'];
+$fars11 = $result['result']['3']['play_online'];
+$fars12 = $result['result']['4']['resolution'];
+ $fars13 = $result['result']['4']['link'];
+$fars14 = $result['result']['4']['play_online'];
+$fars15 = $result['result']['5']['resolution'];
+    $fars16 = $result['result']['5']['link'];
+    $fars17 = $result['result']['5']['play_online'];
+    $fars18 = $result['result']['6']['resolution'];
+    $fars19 = $result['result']['6']['link'];
+    $fars20 = $result['result']['6']['play_online'];
+    $fars21 = $result['result']['7']['resolution'];
+    $fars22 = $result['result']['7']['link'];
+    $fars23 = $result['result']['7']['play_online'];
+  
+  sendaction($chat_id,typing);
+sendmessage($chat_id,"⁦✴️⁩وبسرویس در حال جمع آوری اطلاعات است ، لطفا کمی صبر کنید .....⁦✴️⁩","html","true");
+
+    $longurl61 = urlencode ("$fars1");
+    $longurl62 = urlencode ("$fars2");
+    $longurl63 = urlencode ("$fars10");
+    $longurl64 = urlencode ("$fars13");
+    $longurl65 = urlencode ("$fars16");
+    $longurl66 = urlencode ("$fars19");
+    $longurl67 = urlencode ("$fars22");
+    
+    $longurl1 = urlencode ("$fars5");
+    
+    $longurl3 = urlencode ("$fars8");
+    
+    $longurl5 = urlencode ("$fars11");
+   
+    $longurl7 = urlencode ("$fars14");
+  
+    $longurl9 = urlencode ("$fars17");
+  
+    $longurl11 = urlencode ("$fars20");
+ 
+    $longurl13 = urlencode ("$fars23");
+
+    $apitoken = '540b1808cc621c989aab1863f1e178de05fb566c';
+
+   
+    $apiurl61 = "https://1da.ir/api?api={$apitoken}&url={$longurl61}&alias=CustomAlias&format=text";
+   
+    $apiurl62 = "https://1da.ir/api?api={$apitoken}&url={$longurl62}&alias=CustomAlias&format=text";
+   
+    $apiurl63 = "https://1da.ir/api?api={$apitoken}&url={$longurl63}&alias=CustomAlias&format=text";
+   
+    $apiurl64 = "https://1da.ir/api?api={$apitoken}&url={$longurl64}&alias=CustomAlias&format=text";
+   
+    $apiurl65 = "https://1da.ir/api?api={$apitoken}&url={$longurl65}&alias=CustomAlias&format=text";
+   
+    $apiurl66 = "https://1da.ir/api?api={$apitoken}&url={$longurl66}&alias=CustomAlias&format=text";
+   
+    $apiurl67 = "https://1da.ir/api?api={$apitoken}&url={$longurl67}&alias=CustomAlias&format=text";
+   
+    $apiurl1 = "https://1da.ir/api?api={$apitoken}&url={$longurl1}&alias=CustomAlias&format=text";
+   
+    $apiurl3 = "https://1da.ir/api?api={$apitoken}&url={$longurl3}&alias=CustomAlias&format=text";
+    
+    $apiurl5 = "https://1da.ir/api?api={$apitoken}&url={$longurl5}&alias=CustomAlias&format=text";
+    
+    $apiurl7 = "https://1da.ir/api?api={$apitoken}&url={$longurl7}&alias=CustomAlias&format=text";
+  
+    $apiurl9 = "https://1da.ir/api?api={$apitoken}&url={$longurl9}&alias=CustomAlias&format=text";
+    
+    $apiurl11 = "https://1da.ir/api?api={$apitoken}&url={$longurl11}&alias=CustomAlias&format=text";
+ 
+    $apiurl13 = "https://1da.ir/api?api={$apitoken}&url={$longurl13}&alias=CustomAlias&format=text";
+
+
+    $amir1 = @file_get_contents($apiurl1);
+
+    $amir3 = @file_get_contents($apiurl3);
+
+    $amir5 = @file_get_contents($apiurl5);
+    
+    $amir7 = @file_get_contents($apiurl7);
+   
+    $amir9 = @file_get_contents($apiurl9);
+    
+    $amir11 = @file_get_contents($apiurl11);
+   
+    $amir13 = @file_get_contents($apiurl13);
+    
+    $amir61 = @file_get_contents($apiurl61);
+    $amir62 = @file_get_contents($apiurl62);
+    $amir63 = @file_get_contents($apiurl63);
+    $amir64 = @file_get_contents($apiurl64);
+    $amir65 = @file_get_contents($apiurl65);
+    $amir66 = @file_get_contents($apiurl66);
+    $amir67 = @file_get_contents($apiurl67);
+    
+ sendaction($chat_id,typing);
+ 
+bot('sendphoto',[
+    'chat_id'=>$chat_id,
+    'photo'=>"$ghol1",
+    'caption'=>"
+
+عنوان فیلم : $ghol
+
+مدت زمان : $ghol2
+
+زبان فیلم : $ghol3
+
+تاریخ اکران : $ghol4
+
+امتیاز : $farsi"]);
+
+sendmessage($chat_id,"
+https://mobomovie2.site
+
+کیفیت : $fars3
+
+
+لینک : $amir61
+
+
+  مشاهده آنلاین : $amir1
+
+==============================
+
+کیفیت : $fars6
+
+
+
+لینک : $amir62
+
+
+ مشاهده آنلاین : $amir3
+
+
+==============================
+
+کیفیت : $fars9
+
+
+
+لینک : $amir63
+
+
+مشاهده آنلاین : $amir5
+
+
+==============================
+
+کیفیت : $fars12
+
+
+
+لینک : $amir64
+
+
+مشاهده آنلاین : $amir7
+
+
+==============================
+
+کیفیت : $fars15
+
+
+
+لینک : $amir65
+
+
+مشاهده آنلاین : $amir9
+
+
+==============================
+
+کیفیت : $fars18
+
+
+
+لینک : $amir66
+
+
+مشاهده آنلاین : $amir11
+
+
+==============================
+
+کیفیت : $fars21
+
+
+
+لینک : $amir67
+
+
+مشاهده آنلاین :$amir13
+ ------------------------------
+نکته 🔔 :
+   جهت دانلود فیلم ، فیلترشکن باید خاموش باشد ","html","true");
+
+}
+elseif($data == "filmk"){ 
+file_put_contents("ali.txt","filmk");
+
+bot('editmessagetext' ,[
+    'chat_id'=>$chatid,
+    'message_id'=>$message_id,
+   'text'=> "نام فیلم مورد نظر را ارسال کنید
+    بعنوان مثال : spider-man ✴️,
+    
+    همچنین میتوانید یک کلمه از فیلم را ارسال کنید مثال :
+        
+        Spider✴️", 'parse_mode'=>"html",'reply_markup'=>$bargasht]);
+}
+ elseif($ali == "filmk") {
+file_put_contents("ali.txt","No");
+file_put_contents("ali.txt","filmkade");
+   
+    $tik = $message->text;
+
+    $get = file_get_contents("http://api.eliyateam.ir/dibamovie.php?type=search&q=$tik");
+
+    $result = json_decode($get, true);
+    $diba1 = $result['Result']['0']['code'];
+    $diba3 = $result['Result']['0']['Name'];
+    $diba5 = $result['Result']['0']['cover'];
+    $diba2 = $result['Result']['1']['code'];
+    $diba6 = $result['Result']['1']['Name'];
+    $diba8 = $result['Result']['1']['cover'];
+    $diba9 = $result['Result']['2']['Name'];
+    $diba10 = $result['Result']['2']['code'];
+    $diba11 = $result['Result']['2']['cover'];
+    $diba12 = $result['Result']['3']['Name'];
+    $diba13 = $result['Result']['3']['code'];
+    $diba14 = $result['Result']['3']['cover'];
+    $diba15 = $result['Result']['4']['Name'];
+    $diba16 = $result['Result']['4']['code'];
+    $diba17 = $result['Result']['4']['cover'];
+    $diba18 = $result['Result']['5']['Name'];
+    $diba19 = $result['Result']['5']['code'];
+    $diba20 = $result['Result']['5']['cover'];
+    $diba21 = $result['Result']['6']['Name'];
+    $diba22 = $result['Result']['6']['code'];
+    $diba23 = $result['Result']['6']['cover'];
+
+sendaction($chat_id,typing);
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba5",
+    'caption'=>"$diba3"]);
+
+
+    sendmessage($chat_id, "
+
+کد فیلم: $diba1", "html", "true");
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba8",
+    'caption'=>"$diba6"]);
+
+sendmessage($chat_id, "
+
+کد فیلم: $diba2", "html", "true");
+
+ bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba11",
+    'caption'=>"$diba9"]);
+
+sendmessage($chat_id, "
+
+کد فیلم: $diba10", "html", "true");
+
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba14",
+    'caption'=>"$diba12"]);
+
+sendmessage($chat_id, "
+
+
+کد فیلم: $diba13", "html", "true");
+
+bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba17",
+    'caption'=>"$diba15"]);
+
+sendmessage($chat_id, "
+
+
+کد فیلم: $diba16", "html", "true");
+
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba20",
+    'caption'=>"$diba18"]);
+
+sendmessage($chat_id, "
+
+کد فیلم: $diba19", "html", "true");
+
+    bot('SendPhoto',[
+    'chat_id'=>$chat_id, 
+    'photo'=>"$diba23",
+    'caption'=>"$diba21"]);
+
+sendmessage($chat_id, "
+
+کد فیلم: $diba22", "html", "true");
+
+    sendmessage($chat_id, "💥کد  فیلم مورد نظر را کپی و ارسال کنید 💥 ", "html", "true");}
+    
+    elseif($ali == "filmkade"){ 
+        
+   file_put_contents("ali.txt","No");
+ sendmessage($chat_id,"وبسرویس در حال جمع آوری اطلاعات است . لطفا کمی صبر کنید.....","html","true");
+ 
+    $cod = $message->text;
+
+    $get = file_get_contents("http://api.eliyateam.ir/dibamovie.php?type=getdata&code=$cod");
+
+    $result = json_decode($get, true);
+    $talab = $result['zirnevis'];
+    $tal = $result['name'];
+    $tal2 = $result['time'];
+    $tal3 = $result['cover'];
+    $tal4 = $result['creatby'];
+    $talai = $result['bio'];
+
+    $tala1 = $result['downorg']['0']['keifiat'];
+    $tala2 = $result['downorg']['0']['urlorg'];
+    $tala3 = $result['downorg']['0']['size'];
+
+
+    $tala4 = $result['downorg']['1']['keifiat'];
+    $tala5 = $result['downorg']['1']['urlorg'];
+    $tala6 = $result['downorg']['1']['size'];
+
+    $tala7 = $result['downorg']['2']['keifiat'];
+    $tala8 = $result['downorg']['2']['urlorg'];
+    $tala9 = $result['downorg']['2']['size'];
+
+    $tala10 = $result['downorg']['3']['keifiat'];
+    $tala11 = $result['downorg']['3']['urlorg'];
+    $tala12 = $result['downorg']['3']['size'];
+
+    $tala13 = $result['downorg']['4']['keifiat'];
+    $tala14 = $result['downorg']['4']['urlorg'];
+    $tala15 = $result['downorg']['4']['size'];
+
+    $tala16 = $result['downorg']['5']['keifiat'];
+    $tala17 = $result['downorg']['5']['urlorg'];
+    $tala18 = $result['downorg']['5']['size'];
+
+    $tala19 = $result['downorg']['6']['keifiat'];
+    $tala20 = $result['downorg']['6']['urlorg'];
+    $tala21 = $result['downorg']['6']['size'];
+
+
+    $tala22 = $result['downorg']['7']['keifiat'];
+    $tala23 = $result['downorg']['7']['urlorg'];
+    $tala24 = $result['downorg']['7']['size'];
+
+    $tala25 = $result['downorg']['8']['keifiat'];
+    $tala26 = $result['downorg']['8']['urlorg'];
+    $tala27 = $result['downorg']['8']['size'];
+
+    $tala28 = $result['downorg']['9']['keifiat'];
+    $tala29 = $result['downorg']['9']['urlorg'];
+    $tala30 = $result['downorg']['9']['size'];
+
+    $tala31 = $result['downorg']['10']['keifiat'];
+    $tala32 = $result['downorg']['10']['urlorg'];
+    $tala33 = $result['downorg']['10']['size'];
+
+    $tala34 = $result['downorg']['11']['keifiat'];
+    $tala35 = $result['downorg']['11']['urlorg'];
+    $tala36 = $result['downorg']['11']['size'];
+
+    $tala37 = $result['downorg']['12']['keifiat'];
+    $tala38 = $result['downorg']['12']['urlorg'];
+    $tala39 = $result['downorg']['12']['size'];
+
+    $tala40 = $result['downorg']['13']['keifiat'];
+    $tala41 = $result['downorg']['13']['urlorg'];
+    $tala42 = $result['downorg']['13']['size'];
+
+    $tala43 = $result['downorg']['14']['keifiat'];
+    $tala44 = $result['downorg']['14']['urlorg'];
+    $tala45 = $result['downorg']['14']['size'];
+
+    $tala46 = $result['downorg']['15']['keifiat'];
+    $tala47 = $result['downorg']['15']['urlorg'];
+    $tala48 = $result['downorg']['15']['size'];
+
+    $tala49 = $result['downorg']['16']['keifiat'];
+    $tala50 = $result['downorg']['16']['urlorg'];
+    $tala51 = $result['downorg']['16']['size'];
+
+
+    $long_url = urlencode ("$tala2");
+    $long_url1 = urlencode ("$tala5");
+    $long_url2 = urlencode ("$tala8");
+    $long_url3 = urlencode ("$tala11");
+    $long_url4 = urlencode ("$tala14");
+    $long_url5 = urlencode ("$tala17");
+    $long_url6 = urlencode ("$tala17");
+    $long_url7 = urlencode ("$tala20");
+    $long_url8 = urlencode ("$tala23");
+    $long_url9 = urlencode ("$tala26");
+    $long_url10 = urlencode ("$tala29");
+    $long_url11 = urlencode ("$tala32");
+    $long_url12 = urlencode ("$tala35");
+    $long_url13 = urlencode ("$tala38");
+    $long_url14 = urlencode ("$tala41");
+    $long_url15 = urlencode ("$tala44");
+    $long_url16 = urlencode ("$tala47");
+
+
+    $api_token = '540b1808cc621c989aab1863f1e178de05fb566c';
+
+    $api_url = "https://1da.ir/api?api={$api_token}&url={$long_url}&alias=CustomAlias&format=text";
+    $api_url1 = "https://1da.ir/api?api={$api_token}&url={$long_url1}&alias=CustomAlias&format=text";
+    $api_url2 = "https://1da.ir/api?api={$api_token}&url={$long_url2}&alias=CustomAlias&format=text";
+    $api_url3 = "https://1da.ir/api?api={$api_token}&url={$long_url3}&alias=CustomAlias&format=text";
+    $api_url4 = "https://1da.ir/api?api={$api_token}&url={$long_url4}&alias=CustomAlias&format=text";
+    $api_url5 = "https://1da.ir/api?api={$api_token}&url={$long_url5}&alias=CustomAlias&format=text";
+    $api_url6 = "https://1da.ir/api?api={$api_token}&url={$long_url6}&alias=CustomAlias&format=text";
+    $api_url7 = "https://1da.ir/api?api={$api_token}&url={$long_url7}&alias=CustomAlias&format=text";
+    $api_url8 = "https://1da.ir/api?api={$api_token}&url={$long_url8}&alias=CustomAlias&format=text";
+    $api_url9 = "https://1da.ir/api?api={$api_token}&url={$long_url9}&alias=CustomAlias&format=text";
+    $api_url10 = "https://1da.ir/api?api={$api_token}&url={$long_url10}&alias=CustomAlias&format=text";
+    $api_url11 = "https://1da.ir/api?api={$api_token}&url={$long_url11}&alias=CustomAlias&format=text";
+    $api_url12 = "https://1da.ir/api?api={$api_token}&url={$long_url12}&alias=CustomAlias&format=text";
+    $api_url13 = "https://1da.ir/api?api={$api_token}&url={$long_url13}&alias=CustomAlias&format=text";
+    $api_url14 = "https://1da.ir/api?api={$api_token}&url={$long_url14}&alias=CustomAlias&format=text";
+    $api_url15 = "https://1da.ir/api?api={$api_token}&url={$long_url15}&alias=CustomAlias&format=text";
+    $api_url16 = "https://1da.ir/api?api={$api_token}&url={$long_url16}&alias=CustomAlias&format=text";
+
+    $sadra1 = @file_get_contents($api_url);
+
+    $sadra2 = @file_get_contents($api_url1);
+
+    $sadra3 = @file_get_contents($api_url2);
+
+    $sadra4 = @file_get_contents($api_url3);
+    $sadra5 = @file_get_contents($api_url4);
+    $sadra6 = @file_get_contents($api_url5);
+    $sadra7 = @file_get_contents($api_url6);
+    $sadra8 = @file_get_contents($api_url7);
+    $sadra9 = @file_get_contents($api_url8);
+    $sadra10 = @file_get_contents($api_url9);
+    $sadra11 = @file_get_contents($api_url10);
+    $sadra12 = @file_get_contents($api_url11);
+    $sadra13 = @file_get_contents($api_url12);
+    $sadra14 = @file_get_contents($api_url13);
+    $sadra15 = @file_get_contents($api_url14);
+    $sadra16 = @file_get_contents($api_url15);
+    $sadra17 = @file_get_contents($api_url16);
+sendaction($chat_id,typing);
+sendphoto($chat_id, "$tal3", "
+⚡ $tal ⚡
+
+
+ساخت کشور 🛡️ : $tal4
+
+زمان ⏲️ : $tal2
+
+خلاصه 📝 : $talai");
+bot('sendmessage',[
+    'chat_id'=>$chat_id,
+    'text'=>"
+https://mobomovie2.site
+
+
+کیفیت : $tala1
+
+
+لینک دانلود : $sadra1
+
+
+حجم : $tala3
+
+==============================
+
+کیفیت : $tala4
+
+
+لینک دانلود : $sadra2
+
+
+حجم : $tala6
+
+==============================
+
+کیفیت : $tala7
+
+
+لینک دانلود : $sadra3
+
+
+حجم : $tala9
+
+==============================
+
+کیفیت : $tala10
+
+
+لینک دانلود : $sadra4
+
+
+حجم : $tala12
+
+==============================
+
+کیفیت : $tala13
+
+
+لینک دانلود : $sadra5
+
+
+حجم : $tala15
+
+==============================
+
+کیفیت : $tala16
+
+
+لینک دانلود : $sadra6
+
+
+حجم : $tala18
+
+==============================
+
+کیفیت : $tala19
+
+
+لینک دانلود : $sadra7
+
+
+حجم : $tala21
+
+==============================
+
+کیفیت : $tala22
+
+
+لینک دانلود : $sadra8
+
+
+حجم : $tala24
+
+==============================
+
+کیفیت : $tala25
+
+
+لینک دانلود : $sadra9
+
+
+حجم : $tala27
+
+==============================
+
+کیفیت : $tala28
+
+
+لینک دانلود : $sadra10
+
+
+حجم : $tala30
+
+==============================
+
+کیفیت : $tala31
+
+
+لینک دانلود : $sadra11
+
+
+حجم : $tala33
+
+==============================
+
+کیفیت : $tala34
+
+
+لینک دانلود : $sadra12
+
+
+حجم : $tala36
+
+==============================
+
+کیفیت : $tala37
+
+
+
+لینک دانلود : $sadra13
+
+
+حجم : $tala39
+
+==============================
+
+کیفیت : $tala40
+
+
+لینک دانلود : $sadra14
+
+
+حجم : $tala42
+
+==============================
+
+کیفیت : $tala43
+
+
+لینک دانلود : $sadra15
+
+
+حجم : $tala45
+
+==============================
+
+کیفیت : $tala46
+
+
+لینک دانلود :  $sadra16
+
+
+حجم : $tala48
+
+==============================
+
+کیفیت : $tala49
+
+
+لینک دانلود :  $sadra17
+
+
+حجم : $tala51"]);}
+    
+elseif($data == "khodro"){ 
+    file_put_contents("data.json",json_encode($dataa));
+  $get = file_get_contents("https://api.codebazan.ir/car-price/");
+
+    $result = json_decode($get, true);
+
+    $ali1 = $result['Result']['0']['name'];
+    $ali2 = $result['Result']['0']['moshakhasat'];
+    $ali3 = $result['Result']['0']['karkhane'];
+    $ali4 = $result['Result']['0']['bazar'];
+
+
+    $ali5 = $result['Result']['1']['name'];
+    $ali6 = $result['Result']['1']['moshakhasat'];
+    $ali7 = $result['Result']['1']['karkhane'];
+    $ali8 = $result['Result']['1']['bazar'];
+
+
+    $ali9 = $result['Result']['2']['name'];
+    $ali10 = $result['Result']['2']['moshakhasat'];
+    $ali11 = $result['Result']['2']['karkhane'];
+    $ali12 = $result['Result']['2']['bazar'];
+
+
+    $ali13 = $result['Result']['3']['name'];
+    $ali14 = $result['Result']['3']['moshakhasat'];
+    $ali15 = $result['Result']['3']['karkhane'];
+    $ali16 = $result['Result']['3']['bazar'];
+
+
+    $ali17 = $result['Result']['4']['name'];
+    $ali18 = $result['Result']['4']['moshakhasat'];
+    $ali19 = $result['Result']['4']['karkhane'];
+    $ali20 = $result['Result']['4']['bazar'];
+
+
+    $ali21 = $result['Result']['5']['name'];
+    $ali22 = $result['Result']['5']['moshakhasat'];
+    $ali23 = $result['Result']['5']['karkhane'];
+    $ali24 = $result['Result']['5']['bazar'];
+
+
+    $ali25 = $result['Result']['6']['name'];
+    $ali26 = $result['Result']['6']['moshakhasat'];
+    $ali27 = $result['Result']['6']['karkhane'];
+    $ali28 = $result['Result']['6']['bazar'];
+
+
+    $ali29 = $result['Result']['7']['name'];
+    $ali30 = $result['Result']['7']['moshakhasat'];
+    $ali31 = $result['Result']['7']['karkhane'];
+    $ali32 = $result['Result']['7']['bazar'];
+
+
+    $ali33 = $result['Result']['8']['name'];
+    $ali34 = $result['Result']['8']['moshakhasat'];
+    $ali35 = $result['Result']['8']['karkhane'];
+    $ali36 = $result['Result']['8']['bazar'];
+
+
+    $ali37 = $result['Result']['9']['name'];
+    $ali38 = $result['Result']['9']['moshakhasat'];
+    $ali39 = $result['Result']['9']['karkhane'];
+    $ali40 = $result['Result']['9']['bazar'];
+
+
+    $ali41 = $result['Result']['10']['name'];
+    $ali42 = $result['Result']['10']['moshakhasat'];
+    $ali43 = $result['Result']['10']['karkhane'];
+    $ali44 = $result['Result']['10']['bazar'];
+
+
+    $ali45 = $result['Result']['11']['name'];
+    $ali46 = $result['Result']['11']['moshakhasat'];
+    $ali47 = $result['Result']['11']['karkhane'];
+    $ali48 = $result['Result']['11']['bazar'];
+
+
+    $ali49 = $result['Result']['12']['name'];
+    $ali50 = $result['Result']['12']['moshakhasat'];
+    $ali50 = $result['Result']['12']['karkhane'];
+    $ali52 = $result['Result']['12']['bazar'];
+
+
+    $ali53 = $result['Result']['13']['name'];
+    $ali54 = $result['Result']['13']['moshakhasat'];
+    $ali55 = $result['Result']['13']['karkhane'];
+    $ali56 = $result['Result']['13']['bazar'];
+
+
+    $ali57 = $result['Result']['14']['name'];
+    $ali58 = $result['Result']['14']['moshakhasat'];
+    $ali59 = $result['Result']['14']['karkhane'];
+    $ali60 = $result['Result']['14']['bazar'];
+
+
+    $ali61 = $result['Result']['15']['name'];
+    $ali62 = $result['Result']['15']['moshakhasat'];
+    $ali63 = $result['Result']['15']['karkhane'];
+    $ali64 = $result['Result']['15']['bazar'];
+
+
+    $ali65 = $result['Result']['16']['name'];
+    $ali66 = $result['Result']['16']['moshakhasat'];
+    $ali67 = $result['Result']['16']['karkhane'];
+    $ali68 = $result['Result']['16']['bazar'];
+
+
+    $ali69 = $result['Result']['17']['name'];
+    $ali70 = $result['Result']['17']['moshakhasat'];
+    $ali71 = $result['Result']['17']['karkhane'];
+    $ali72 = $result['Result']['17']['bazar'];
+
+
+    $ali73 = $result['Result']['18']['name'];
+    $ali74 = $result['Result']['18']['moshakhasat'];
+    $ali75 = $result['Result']['18']['karkhane'];
+    $ali76 = $result['Result']['18']['bazar'];
+
+
+    $ali77 = $result['Result']['19']['name'];
+    $ali78 = $result['Result']['19']['moshakhasat'];
+    $ali79 = $result['Result']['19']['karkhane'];
+    $ali80 = $result['Result']['19']['bazar'];
+
+
+    $ali81 = $result['Result']['20']['name'];
+    $ali82 = $result['Result']['20']['moshakhasat'];
+    $ali83 = $result['Result']['20']['karkhane'];
+    $ali84 = $result['Result']['20']['bazar'];
+
+
+    $ali85 = $result['Result']['21']['name'];
+    $ali86 = $result['Result']['21']['moshakhasat'];
+    $ali87 = $result['Result']['21']['karkhane'];
+    $ali88 = $result['Result']['21']['bazar'];
+
+
+    $ali89 = $result['Result']['22']['name'];
+    $ali90 = $result['Result']['22']['moshakhasat'];
+    $ali91 = $result['Result']['22']['karkhane'];
+    $ali92 = $result['Result']['22']['bazar'];
+
+
+    $ali93 = $result['Result']['23']['name'];
+    $ali94 = $result['Result']['23']['moshakhasat'];
+    $ali95 = $result['Result']['23']['karkhane'];
+    $ali96 = $result['Result']['23']['bazar'];
+       
+    bot('editmessagetext', [
+ 'chat_id'=>$chatid,
+ 'message_id'=>$message_id,
+ 'text'=>"🌟 
+
+نام : $ali1
+
+مشخصات : $ali2
+
+قیمت کارخانه : $ali3
+
+قیمت بازار : $ali4
+-------------------------------
+نام : $ali5
+
+مشخصات : $ali6
+
+قیمت کارخانه : $ali7
+
+قیمت بازار : $ali8
+--------------------------------
+نام : $ali9
+
+مشخصات : $ali10
+
+قیمت کارخانه : $ali11
+
+قیمت بازار : $ali12
+--------------------------------
+نام : $ali13
+
+مشخصات : $ali14
+
+قیمت کارخانه : $ali15
+
+قیمت بازار : $ali16
+--------------------------------
+
+نام : $ali17
+
+مشخصات : $ali18
+
+قیمت کارخانه : $ali19
+
+قیمت بازار : $ali20
+--------------------------------
+
+نام : $ali21
+
+مشخصات : $ali22
+
+قیمت کارخانه : $ali23
+
+قیمت بازار : $ali24
+--------------------------------
+نام : $ali25
+
+مشخصات : $ali26
+
+قیمت کارخانه : $ali27
+
+قیمت بازار : $ali28
+--------------------------------
+نام : $ali29
+
+مشخصات : $ali30
+
+قیمت کارخانه : $ali31
+
+قیمت بازار : $ali32
+--------------------------------
+نام : $ali33
+
+مشخصات : $ali33
+
+قیمت کارخانه : $ali35
+
+قیمت بازار : $ali36
+--------------------------------
+
+نام : $ali37
+
+مشخصات : $ali38
+
+قیمت کارخانه : $ali39
+
+قیمت بازار : $ali40
+--------------------------------
+
+نام : $ali41
+
+مشخصات : $ali42
+
+قیمت کارخانه : $ali43
+
+قیمت بازار : $ali44
+--------------------------------
+نام : $ali45
+
+مشخصات : $ali46
+
+قیمت کارخانه : $ali47
+
+قیمت بازار : $ali48
+--------------------------------
+نام : $ali49
+
+مشخصات : $ali50
+
+قیمت کارخانه : $ali50
+
+قیمت بازار : $ali52
+--------------------------------
+نام : $ali53
+
+مشخصات : $ali54
+
+قیمت کارخانه : $ali55
+
+قیمت بازار : $ali56
+--------------------------------
+
+نام : $ali57
+
+مشخصات : $ali58
+
+قیمت کارخانه : $ali59
+
+قیمت بازار : $ali60
+--------------------------------
+
+نام : $ali61
+
+مشخصات : $ali62
+
+قیمت کارخانه : $ali63
+
+قیمت بازار : $ali64
+--------------------------------
+نام : $ali65
+
+مشخصات : $ali66
+
+قیمت کارخانه : $ali67
+
+قیمت بازار : $ali68
+--------------------------------
+نام : $ali69
+
+مشخصات : $ali70
+
+قیمت کارخانه : $ali71
+
+قیمت بازار : $ali72
+-------------------------------
+نام : $ali73
+
+مشخصات : $ali74
+
+قیمت کارخانه : $ali75
+
+قیمت بازار : $ali76
+-------------------------------
+
+نام : $ali77
+
+مشخصات : $ali78
+
+قیمت کارخانه : $ali79
+
+قیمت بازار : $ali80
+------------------------------
+
+نام : $ali81
+
+مشخصات : $ali82
+
+قیمت کارخانه : $ali83
+
+قیمت بازار : $ali84
+-------------------------------
+نام : $ali85
+
+مشخصات : $ali86
+
+قیمت کارخانه : $ali87
+
+قیمت بازار : $ali88
+-------------------------------
+نام : $ali89
+
+مشخصات : $ali90
+
+قیمت کارخانه : $ali91
+
+قیمت بازار : $ali92
+------------------------------
+نام : $ali93
+
+مشخصات : $ali94
+
+قیمت کارخانه : $ali95
+
+قیمت بازار : $ali96
+-------------------------------
+اکنون : $time
+
+امروز : $date",  'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht]);
+
+}
+elseif ($text == "/Gmail" && $from_id == $ADMIN) {
+  
+    $get = json_decode(file_get_contents("https://haji-api.ir/gmail"));
+    $result = objectToArrays($get);
+
+    $mail = $result['gmail'];
+    $mail1 = $result['message'];
+    
+     
+   bot('sendmessage',[
+ 'chat_id'=>$chat_id,
+ 'text'=>"🌟 
+address: $mail
+status : $mail1", 'parse_mode'=>"html",'reply_markup'=> json_encode(['keyboard' => [
+        [['text' => "وارد کردن"]], 
+    ], 'resize_keyboard' => true])
     ]);
-	}
-	//===========
-	elseif($text == "📬پروفایل" and $type == "private"){
-	if ($_name == ''){
-	
-	SendMessage($chat_id,"📬پروفایل خالی است ...","html","true");	
-	}else{
-	$protxt = '';
-	if ($_name != ''){
-		$protxt = $_name;
-	}if ($_age != ''){
-		$protxt = $protxt."\n".$_age.' ساله';
-	}if ($_location != ''){
-		$protxt = $protxt."\nاز ".$_location;
-	}if ($_tah != ''){
-		  $protxt = $protxt."\n".$_tah;
-	}if ($_stats != ''){
-		  $protxt = $protxt."\n".$_stats;
-	}if ($_phone != ''){
-		  $protxt = $protxt."\n<b>Tel:</b> ".$_phone;
-	}if ($_insta != ''){
-		  $protxt = $protxt."\n<b>insta:</b> ".$_insta;
-	}if ($_channel != ''){
-		 $protxt = $protxt."\n<b>Channel:</b> ".$_channel;
-	}if ($_site != ''){
-		  $protxt = $protxt."\n<b>Site:</b> ".$_site;
-		  }
-	
-	SendMessage($chat_id,"$protxt","html","true");
-	}
-	}
-	//==========
-	elseif($text == '↩️منوی اصلی' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"
-🔥 @Savior_128
-","html","true",$button_official);
-	}
-	//==========
-	elseif(preg_match('/^\/([Cc][Rr][Ee][Aa][Tt][Oo][Rr])/',$text)){
-	
-	SendMessage($chat_id,"
-🔥 @Savior_128
-","html","true");
-	}
-	//===========
-	elseif(preg_match('/^\/([Ss]tart)/',$text) and $type == "private"){
-	
-	if($from_id == $admin ){
-	SendMessage($chat_id,"<i>✅سلام
-	✅به ربات خودتون خوش امدین:</i>","html","true",$button_manage);
-	}else{
-	SendMessage($chat_id,$_start,"html","true",$button_dokme_ha);
 
-	}
-	}
-	//===========
-	elseif($text == '✴️بخش مدیریت' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>✴️ به بخش ادمین خوش اومدی.
-	✴️ یک گزینه انتخاب کنید:</i>","html","true",$button_official);
-	}
-        //===========
-        elseif($text == 'جعبه ابزار⁦🛠️⁩'){
-      save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>✴️ سلام ، به جعبه ابزار خوش آمدید💖   .
-	
+} elseif($text == "وارد کردن"){
+ 
+     
+   file_put_contents("ali.txt","gmailgir");
+   
+   bot('sendmessage',[
+ 'chat_id'=>$chat_id,
+ 'text'=>"جیمیل دریافتی را ارسال کنید" ]);
 
-💟 امکانات جعبه ابزار : 
+} elseif ($ali == "gmailgir"){ 
+    
+    file_put_contents("ali.txt","none");
+    
+    $mil = $message->text;
 
-💠 تبدیل عکس به استیکر و بالعکس 
+    $get = json_decode(file_get_contents("https://haji-api.ir/gmail?gmail=$mil"));
+    $result =objectToArrays($get, true);
 
-💠 دو سرویس مجزا جهت دانلود از اینستاگرام 
+    $tok = $result['gmail_messages']['message1']['Message'];
 
-💠 سرویس دانلود از یوتیوب 
+    $tok1 = $result['gmail_messages']['message2']['Message'];
 
-💠 سرویس واژه یاب دهخدا و معین
+    $tok2 = $result['gmail_messages']['message1']['Subject'];
 
-💠 سرویس به روز قیمت موبایل
+    $tok3 = $result['gmail_messages']['message2']['Subject'];
+    $tok4 = $result['gmail_messages']['message1']['From'];
 
-💠 سرویس اطلاعات مربوط به تاریخ و سال
+    $tok5 = $result['gmail_messages']['message2']['From'];
 
-💠 سرویس دریافت پروکسی
+    $tok6 = $result['gmail_messages']['message3']['Message'];
 
-💠 فال حافظ 
+    $tak7 = $result['message'];
+    $tak8 = $result['status'];
 
-💠 خبرگزاری خبرنگاران جوان
+     bot('sendmessage',[
+ 'chat_id'=>$chat_id,
+ 'text'=>"
 
-💠 سرویس دریافت تصاویر wallpaper
+subject : $tok2
 
-برای انتقال به جعبه ابزار ، روی لینک زیر کلیک کنید  
+From : $tok4
+
+message 1 : $tok
+
+
+------------------------------
+
+subject : $tok5
+
+From : $tok3
+
+message 2 : $tok1
+
+
+--------------------------------
+message 3 : $tok6
+
+
+--------------------------------
+status : $tak7
+
+message : $tak8",'parse_mode'=>"html",'reply_markup'=> json_encode(['keyboard' => [
+        [['text' => "/panel"]], 
+    ], 'resize_keyboard' => true])
+    ]);
+}
+
+elseif($data == "moozik"){ 
+    
+    file_put_contents("ali.txt","moozik");
+      
+   bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"🎊به موزیک ویدئوی رادیو جوان خوش آمدید 🎊
+
+نام خواننده مورد نظر را ارسال کنید 
+
+    مثال :
+    
+   behnam+bani
+    
+   Evan+band
+    
+ shadmehr+aghili", 
+ 'parse_mode'=>"MarkDown",
+     'reply_markup'=>$bargasht]);
+}
+elseif($ali == "moozik"){ 
+    
+    file_put_contents("ali.txt","No");
+    file_put_contents("ali.txt","moozikban");
+    
+  $tani = $message->text;
+$get = file_get_contents("http://api.eliyateam.ir/rj-video.php?q=$tani");
+
+$result = json_decode($get, true);
+
+    $a = $result['0']['name'];
+    $a1 = $result['0']['song'];
+    $a2 = $result['0']['artist'];
+    $a3 = $result['0']['cover'];
+    $a4 = $result['0']['id'];
+
+
+    $a5 = $result['1']['name'];
+    $a6 = $result['1']['song'];
+    $a7 = $result['1']['artist'];
+    $a8 = $result['1']['cover'];
+    $a9 = $result['1']['id'];
+
+
+
+    $a10 = $result['2']['name'];
+    $a11 = $result['2']['song'];
+    $a12 = $result['2']['artist'];
+    $a13 = $result['2']['cover'];
+    $a14 = $result['2']['id'];
+
+
+
+    $a15 = $result['3']['name'];
+    $a16 = $result['3']['song'];
+    $a17 = $result['3']['artist'];
+    $a18 = $result['3']['cover'];
+    $a19 = $result['3']['id'];
+
+
+
+    $a20 = $result['4']['name'];
+    $a21 = $result['4']['song'];
+    $a22 = $result['4']['artist'];
+    $a23 = $result['4']['cover'];
+    $a24 = $result['4']['id'];
+
+
+
+    $a25 = $result['5']['name'];
+    $a26 = $result['5']['song'];
+    $a27 = $result['5']['artist'];
+    $a28 = $result['5']['cover'];
+    $a29 = $result['5']['id'];
+
+
+
+    $a30 = $result['6']['name'];
+    $a31 = $result['6']['song'];
+    $a32 = $result['6']['artist'];
+    $a33 = $result['6']['cover'];
+    $a34 = $result['6']['id'];
+
+
+
+    $a35 = $result['7']['name'];
+    $a36 = $result['7']['song'];
+    $a37 = $result['7']['artist'];
+    $a38 = $result['7']['cover'];
+    $a39 = $result['7']['id'];
+
+
+    $a40 = $result['8']['name'];
+    $a41 = $result['8']['song'];
+    $a42 = $result['8']['artist'];
+    $a43 = $result['8']['cover'];
+    $a44 = $result['8']['id'];
+
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a3",
+ 'caption'=>"$a 
+ $a1 
+ $a2"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a4","html","true");
+ 
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a8",
+ 'caption'=>"$a5
+ $a6
+ $a7"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a9","html","true");
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a13",
+ 'caption'=>"$a10
+ $a11
+ $a12"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a14","html","true");
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a18",
+ 'caption'=>"$a15
+ $a16 
+ $a17"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a19","html","true");
+ 
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a23",
+ 'caption'=>"$a20 
+ $a21 
+ $a22"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a24","html","true");
+ 
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a28",
+ 'caption'=>"$a25 
+ $a26 
+ $a27"]);
+ 
+ sendmessage($chat_id,"
+ ID 👉 : $a29","html","true");
+ 
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a33",
+ 'caption'=>"$a30 
+ $a31 
+ $a32"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a34","html","true");
+ 
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a38",
+ 'caption'=>"$a35
+ $a36 
+ $a37"]);
+  
+ sendmessage($chat_id,"
+ ID 👉 : $a39","html","true");
+ 
+   bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$a43",
+ 'caption'=>"$a40
+ $a41 
+ $a42"]);
+ sendmessage($chat_id,"
+ ID 👉 : $a44","html","true");
+ 
+       
+ sendmessage($chat_id,"🌟 آیدی مورد نظر را کپی و ارسال کنید ", "MarkDown",
+      $bargasht);
+}
+    elseif($ali == "moozikban"){ 
+  file_put_contents("ali.txt","No");
+  file_put_contents("ali.txt","moziban2");
+    
+    $sik = $message->text;
+
+    $get = file_get_contents("http://Api.eliyateam.ir/rj-video.php?id=$sik");
+
+    $result = json_decode($get, true);
+    $vi1 = $result['title'];
+    $vi2 = $result['link'];
+    $vi3 = $result['lq_link'];
+    $vi4 = $result['hq_link'];
+
+
+    $vid1 = $result['related']['0']['photo'];
+    $vid7 = $result['related']['0']['lq_link'];
+
+    $vid8 = $result['related']['0']['hq_link'];
+ 
+    $long_url = urlencode ("$vi2");
+    $long_url1 = urlencode ("$vi3");
+    $long_url2 = urlencode ("$vi4");
+    $long_url3 = urlencode ("$vid7");
+    $long_url4 = urlencode ("$vid8");
+    $api_token = '540b1808cc621c989aab1863f1e178de05fb566c';
+
+    $api_url = "https://1da.ir/api?api={$api_token}&url={$long_url}&alias=CustomAlias&format=text";
+    $api_url1 = "https://1da.ir/api?api={$api_token}&url={$long_url1}&alias=CustomAlias&format=text";
+    $api_url2 = "https://1da.ir/api?api={$api_token}&url={$long_url2}&alias=CustomAlias&format=text";
+    $api_url3 = "https://1da.ir/api?api={$api_token}&url={$long_url3}&alias=CustomAlias&format=text";
+    $api_url4 = "https://1da.ir/api?api={$api_token}&url={$long_url4}&alias=CustomAlias&format=text";
+
+    $shahin = @file_get_contents($api_url);
+
+    $shahin1 = @file_get_contents($api_url1);
+
+    $shahin2 = @file_get_contents($api_url2);
+
+    $shahin3 = @file_get_contents($api_url3);
+    $shahin4 = @file_get_contents($api_url4);
+       
+   bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$vid1",
+  'caption'=>"$vi1"]);
+    
+  
+ sendmessage($chat_id,"🌟 
+https://radiojavan.com
+
+لینک ۱ : $shahin
+
+
+لینک ۲ : $shahin1
+
+
+لینک ۳ : $shahin2
+
+
+لینک ۴ : $shahin3
+
+
+لینک ۵ :$shahin4
+-------------------------------
+_________________________فیلتر شکن روشن باشد _____
 
 https://telegram.me/SaviorisGod_bot
 
+اکنون : $time
 
-
-💞دوستدار شما💞 
-♾ @Savior_128 ♾
-	</i>","html","true",$back);
-        }
-  
-        elseif($text == '♦حساب کاربری ربات' and $from_id == $admin and $tp == gold){
-        sendMessage($chat_id,"ربات شما ویژه میباشد");
-        }
-elseif($text == '♦حساب کاربری ربات' and $from_id == $admin and $tp == ""){
-        sendMessage($chat_id,"ربات شما رایگان میباشد اقدام به ویژه کردن آن کنید
-دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇");
-        }
-	//===========
-	elseif($text == '🔯غیر فعال کردن حالت ادمین' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>🔯 حالت ادمین غیرفعال شد.
-	🔯 یک گزینه انتخاب کنید:</i>","html","true",$button_manage);
-	}
-	//===========
-	elseif($text == '♓همگانی و عکس' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type != 'gold'){
-	SendMessage($chat_id,"متاسفانه ربات شما ویژه نمیباشد🚫
-دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}else{
-	save("other/command.txt","s2a+aks");
-	SendMessage($chat_id,"<i>♓ عکس مورد نظر را ارسال کنید.
-	♓ میتوانید از استیکر هم استفاده کنید:</i>","html","true",$button_back);
-	}
-	}
-	//===========
-	elseif($command == 's2a+aks' and $from_id == $admin and $type == "private"){
-	
-	
-	if($update->message->photo != null || $update->message->sticker != null){
-	if($photo2_id != null){
-	$file = $update->message->photo[2]->file_id;	
-	}elseif($photo1_id != null){
-	$file = $update->message->photo[1]->file_id;	
-	}elseif($photo0_id != null){
-	$file = $update->message->photo[0]->file_id;	
-	}elseif($sticker_id != null){
-	$file = $update->message->sticker->file_id;	
-	}
-	$get = botXYZ('getfile',['file_id'=>$file]);
-	$patch = $get->result->file_path;
-	$short = 'https://storage.pwrtelegram.xyz/'.$patch;
-	$url = file_get_contents('https://3pls.ir/api.php?url='.$short);
-	save("other/url_s2a.txt",$url);
-	save("other/command.txt","s2a+aks2");
-	SendMessage($chat_id,"<i>♓ متن مورد نظر را ارسال کنید:</i>","html","true",$button_back);
-	}else{
-	save("other/command.txt","s2a+aks");
-	SendMessage($chat_id,"<i>♓ عکس مورد نظر را ارسال کنید.
-	♓ میتوانید از استیکر هم استفاده کنید:</i>","html","true",$button_back);
-	}
-	}
-	//===========
-	elseif($command == 's2a+aks2' and $from_id == $admin and $type == "private"){
-	
-	save("other/command.txt","s2a+aks3");
-	save("other/text_s2a.txt",$text);
-	SendMessage($chat_id,"<a href='$url_s2a'>‌</a>$text","html","false",$button_back);
-	SendMessage($chat_id,"<i>♓ متن مورد نظر به صورت بالا ارسال میشود. مایل به فرستادن هستید:</i>","html","true",$button_s2a);
-	}
-	//===========
-	elseif($text == '✅بله' and $from_id == $admin and $type == "private" and $command == 's2a+aks3'){
-	
-	save("other/command.txt","none");
-	SendMessage($chat_id,"✅پیام مورد نظر در صف ارسال قرار گرفت.","html","true",$button_official);
-	$all_member = fopen( "other/access/Member.txt", 'r');
-		while( !feof( $all_member)) {
- 			$user = fgets( $all_member);
-			SendMessage($user,"<a href='$url_s2a'>‌</a>$text_s2a","html","false");
-			}
-	}
-	//===========
-	elseif($text == '⏫همگانی و فایل' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type != 'gold'){
-	SendMessage($chat_id,"دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}else{
-	if($_channelFWD == null){
-	SendMessage($chat_id,"<i>⏫ کانال تنظیم نشده است:</i>","html","true",$button_official);
-	}elseif($tchFWD != 'administrator'){
-	SendMessage($chat_id,"<i>⏫ ربات ادمین چنل مورد نظر نیست:</i>","html","true",$button_official);
-	}else{
-	save("other/command.txt","s2a+file");
-	SendMessage($chat_id,"<i>⏫ فایل مورد نظر رو ارسال کنید:</i>","html","true",$button_back);
-	}
-	}
-	}
-	//===========
-	elseif($command == 's2a+file' and $from_id == $admin and $type == "private"){
-	
-	
-	if($sticker_id != null){$file = $sticker_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendsticker?chat_id=$_channelFWD&sticker=$file"));}
-	elseif($video_id != null){$file = $video_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendvideo?chat_id=$_channelFWD&video=$file"));}
-	elseif($voice_id != null){$file = $voice_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendvoice?chat_id=$_channelFWD&voice=$file"));}
-	elseif($file_id != null){$file = $file_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendDocument?chat_id=$_channelFWD&document=$file"));}
-	elseif($music_id != null){$file = $music_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendaudio?chat_id=$_channelFWD&audio=$file"));}
-	elseif($photo2_id != null){$file = $photo2_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendPhoto?chat_id=$_channelFWD&photo=$file"));}
-	elseif($photo1_id != null){$file = $photo1_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendPhoto?chat_id=$_channelFWD&photo=$file"));}
-	elseif($photo0_id != null){$file = $photo0_id;
-	$uid = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/sendPhoto?chat_id=$_channelFWD&photo=$file"));}
-	
-	$id = $uid->result->message_id;
-	
-	$short = "https://t.me/$_channelFWD_B/".$id;
-	$url = file_get_contents('https://3pls.ir/api.php?url='.$short);
-	save("other/url_s2a.txt",$url);
-	save("other/command.txt","s2a+file2");
-	SendMessage($chat_id,"<i>⏫ متن مورد نظر را ارسال کنید:</i>","html","true",$button_back);
-	}
-	//===========
-	elseif($command == 's2a+file2' and $from_id == $admin and $type == "private"){
-	
-	save("other/command.txt","s2a+file3");
-	save("other/text_s2a.txt",$text);
-	SendMessage($chat_id,"<a href='$url_s2a'>‌</a>$text","html","false",$button_back);
-	SendMessage($chat_id,"<i>⏫ متن مورد نظر به صورت بالا ارسال میشود. مایل به فرستادن هستید:</i>","html","true",$button_s2a);
-	}
-	//===========
-	elseif($text == '✅بله' and $from_id == $admin and $type == "private" and $command == 's2a+file3'){
-	
-	save("other/command.txt","none");
-	SendMessage($chat_id,"✅پیام مورد نظر در صف ارسال قرار گرفت.","html","true",$button_official);
-	$all_member = fopen( "other/access/Member.txt", 'r');
-		while( !feof( $all_member)) {
- 			$user = fgets( $all_member);
-			SendMessage($user,"<a href='$url_s2a'>‌</a>$text_s2a","html","false");
-			}
-	}
-
-	//===========
-	elseif($text == '⤴️پیام همگانی' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","s2a");
-	
-	SendMessage($chat_id,"<i>⤴️ پیامتون رو وارد کنید:
-	
-	🚫 توجه: اگر حساب شما ویژه نیست فقط میتوانید پیامی در قالب متن بفرستید.</i>","html","true",$button_back);
-	}
-	elseif($command == 's2a' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type == 'gold'){
-	save("other/command.txt","none");
-	  $s2atext = "✅ پیام همگانی     اعضای ربات 👈 ($mmemcount1)    ⏰ زمان 👈 ($time)   📅 تاریخ 👈 ($date)
-";
-  $s2aid = json_decode(file_get_contents('https://api.telegram.org/bot5390914661:AAH_h1IsgK_gwnxOAZfqFSM6l_ph2Veyrw4/sendMessage?parse_mode=HTML&chat_id=-1001764670025&text='.$s2atext));
-  $s2a_id = $s2aid->result->message_id;
-	SendMessage($chat_id,"<i>⤴️ پیام شما در صف ارسال قرار گرفت.</i>","html","true",$button_official);
-	  ForwardMessage($admin,-1001764670025,$s2a_id);
-	$all_member = fopen( "other/access/Member.txt", 'r');
-		while( !feof( $all_member)) {
- 			$user = fgets( $all_member);
-			if($sticker_id != null){
-			SendSticker($user,$sticker_id);
-			}
-			elseif($video_id != null){
-			SendVideo($user,$video_id,$caption);
-			}
-			elseif($voice_id != null){
-			SendVoice($user,$voice_id,'',$caption);
-			}
-			elseif($file_id != null){
-			SendDocument($user,$file_id,'',$caption);
-			}
-			elseif($music_id != null){
-			SendAudio($user,$music_id,'',$caption);
-			}
-			elseif($photo2_id != null){
-			SendPhoto($user,$photo2_id,'',$caption);
-			}
-			elseif($photo1_id != null){
-			SendPhoto($user,$photo1_id,'',$caption);
-			}
-			elseif($photo0_id != null){
-			SendPhoto($user,$photo0_id,'',$caption);
-			}
-			elseif($text != null){
-			SendMessage($user,$text,"html","true");
-			}
-		}
-	}else{
-		    if($text != null){
-			save("other/command.txt","none");
-			SendMessage($chat_id,"<i>⤴️ پیام شما در صف ارسال قرار گرفت.</i>","html","true",$button_official);
-			$all_member = fopen( "other/access/Member.txt", 'r');
-			while( !feof( $all_member)) {
- 			$user = fgets( $all_member);
-			SendMessage($user,$text,"html","true");
-			}
-			}else{
-			save("other/command.txt","s2a");
-			SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست. لطفا متنی بفرستید:</i>","html","true",$button_back);
-			}
-	}
-	}
-	//===========
-	elseif($text == '🈂فوروارد همگانی' and $from_id == $admin and $type == "private"){
-	if($bot_type == 'gold'){
-	save("other/command.txt","s2a fwd");
-	
-	SendMessage($chat_id,"<i>🈂 پیام مورد نظر را فوروارد کنید:</i>","html","true",$button_back);
-	}else{
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}
-	}
-	elseif($command == 's2a fwd' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>🈂 پیام شما در صف ارسال قرار گرفت.</i>","html","true",$button_official);
-	$all_member = fopen( "other/access/Member.txt", 'r');
-		while( !feof( $all_member)) {
- 			$user = fgets( $all_member);
-			ForwardMessage($user,$admin,$message_id);
-		}
-	}
-	//============
-	elseif($text == '🔧تنظیمات' and $from_id == $admin and $type == "private"){
-	
-	SendMessage($chat_id,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>","html","true",$button_setting);
-	}
-	//============
-	elseif($data == "sticker"){
-	if($sticker == '✅'){
-	save("other/setting/sticker.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال استیکر قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_sticker_off);
-	}else{
-	save("other/setting/sticker.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال استیکر باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_sticker_on);
-	}
-	}
-	//============
-	elseif($data == "file"){
-	if($file == '✅'){
-	save("other/setting/file.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال فایل قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_file_off);
-	}else{
-	save("other/setting/file.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال فایل باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_file_on);
-	}
-	}
-	//============
-	elseif($data == "aks"){
-	if($aks == '✅'){
-	save("other/setting/aks.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال عکس قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_aks_off);
-	}else{
-	save("other/setting/aks.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال عکس باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_aks_on);
-	}
-	}
-	//============
-	elseif($data == "music"){
-	if($music == '✅'){
-	save("other/setting/music.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال موزیک قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_music_off);
-	}else{
-	save("other/setting/music.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال موزیک باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_music_on);
-	}
-	}
-	//============
-	elseif($data == "film"){
-	if($film == '✅'){
-	save("other/setting/film.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال فیلم قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_film_off);
-	}else{
-	save("other/setting/film.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال فیلم باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_film_on);
-	}
-	}
-	//============
-	elseif($data == "voice"){
-	if($voice == '✅'){
-	save("other/setting/voice.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال وویس قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_voice_off);
-	}else{
-	save("other/setting/voice.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال وویس باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_voice_on);
-	}
-	}
-	//============
-	elseif($data == "join"){
-	if($join == '✅'){
-	save("other/setting/join.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ دعوت ربات به گروه قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_join_off);
-	}else{
-	save("other/setting/join.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ دعوت ربات به گروه باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_join_on);
-	}
-	}
-	//============
-	elseif($data == "link"){
-	if($link == '✅'){
-	save("other/setting/link.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال لینک قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_link_off);
-	}else{
-	save("other/setting/link.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال لینک باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_link_on);
-	}
-	}
-	//============
-	elseif($data == "forward"){
-	if($forward == '✅'){
-	save("other/setting/forward.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ ارسال پیام فوروارد شده قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_forward_off);
-	}else{
-	save("other/setting/forward.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ ارسال پیام فوروارد شده باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_forward_on);
-	}
-	}
-	//============
-	elseif($data == "pm_forward"){
-	if($pm_forward == '✅'){
-	save("other/setting/pm_forward.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ فوروارد پیام ها قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_pm_forward_off);
-	}else{
-	save("other/setting/pm_forward.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ فوروارد پیام ها باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_pm_forward_on);
-	}
-	}
-	//============
-	elseif($data == "pm_resani"){
-	if($pm_resani == '✅'){
-	save("other/setting/pm_resani.txt","⛔️");
-	AnswerCallbackQuery($data_id,"⛔️ پیام رسانی قفل شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_pm_resani_off);
-	}else{
-	save("other/setting/pm_resani.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ پیام رسانی باز شد");
-	EditMessageText($chatid,$message_id_call,"<i>🔧 یکی از دکمه های زیر را انتخاب کنید:
-	
-	🚫 دو نکته مهم:
-	👈 اگر فوروارد پیام ها فعال باشد. پس از ریپلای روی پیام مورد نظر پیام شما فوروارد میشود
-	👈 اگر پیام رسانی فعال نباشد. برای شما درخواست چت ارسال میشود</i>",'html','true',$button_setting_pm_resani_on);
-	}
-	}
-	elseif($text == 'آمار' and $from_id == $admin and $type == "private"){
-		/*
-	$txtt = file_get_contents('other/access/Group.txt');
-    $member_id = explode("\n",$txtt);
-    $mmemcount = count($member_id) -1;
-	*/
-	$txttt = file_get_contents('other/access/Member.txt');
-    $member_id1 = explode("\n",$txttt);
-    $mmemcount1 = count($member_id1) -1;
-	/*
-	$txtttt = file_get_contents('other/access/AdminList.txt');
-    $member_id11 = explode("\n",$txtttt);
-    $mmemcount11 = count($member_id11) -1;
-	
-	$txtttt = file_get_contents('other/access/Block-List.txt');
-    $member_id111 = explode("\n",$txtttt);
-    $mmemcount111 = count($member_id111) -1;
-	
-	*/
-	$txttttt = file_get_contents('other/access/Chat.txt');
-    $member_id1111 = explode("\n",$txttttt);
-    $mmemcount1111 = count($member_id1111) -1;
-	
-	$bots = file_get_contents("other/access/UserName.txt");
-	$exbot = explode("@",$bots);
-	$c = count($exbot)-2;
-	$botsss = '';
-	if($exbot[$c-(-1)] != null){
-	$botsss = $botsss."@".$exbot[$c-(-1)];
-	}if($exbot[$c] != null){
-	$botsss = $botsss."@".$exbot[$c];
-	}if($exbot[$c-1] != null){
-	$botsss = $botsss."@".$exbot[$c-1];
-	}if($exbot[$c-2] != null){
-	$botsss = $botsss."@".$exbot[$c-2];
-	}if($exbot[$c-3] != null){
-	$botsss = $botsss."@".$exbot[$c-3];
-	}if($exbot[$c-4] != null){
-	$botsss = $botsss."@".$exbot[$c-4];
-	}if($exbot[$c-5] != null){
-	$botsss = $botsss."@".$exbot[$c-5];
-	}if($exbot[$c-6] != null){
-	$botsss = $botsss."@".$exbot[$c-6];
-	}if($exbot[$c-7] != null){
-	$botsss = $botsss."@".$exbot[$c-7];
-	}if($exbot[$c-8] != null){
-	$botsss = $botsss."@".$exbot[$c-8];
-	}
-	$botsss = str_replace("\n",' | ',$botsss);
-	
-	SendMessage($chat_id,"
-	
-	چت های فعال:$mmemcount1111
-
-	کاربران :$mmemcount1
-	
-	لیست کاربر جدید:
-	$botsss","html","true");
-	}
-		elseif($text == '📊افراد بن شده' and $from_id == $admin and $type == "private"){
-
-	$txttttban = file_get_contents('other/access/Block-List.txt');
-    $member_id111ban = explode("\n",$txttttban);
-    $mmemcount111ban = count($member_id111ban) -1;
-	
-	$botsban = file_get_contents("other/access/Block-List.txt");
-	$exbotban = explode("@",$botsban);
-	$c = count($exbotban)-2;
-	$botsssban = '';
-	if($exbotban[$c-(-1)] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-(-1)];
-	}if($exbotban[$c] != null){
-	$botsssban = $botsssban."@".$exbotban[$c];
-	}if($exbotban[$c-1] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-1];
-	}if($exbotban[$c-2] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-2];
-	}if($exbotban[$c-3] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-3];
-	}if($exbotban[$c-4] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-4];
-	}if($exbotban[$c-5] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-5];
-	}if($exbotban[$c-6] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-6];
-	}if($exbotban[$c-7] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-7];
-	}if($exbotban[$c-8] != null){
-	$botsssban = $botsssban."@".$exbotban[$c-8];
-	}
-	$botsssban = str_replace("\n",' | ',$botsssban);
-	
-	
-	SendMessage($chat_id,"<i>🚫لیست سیاه: </i><b>$mmemcount111ban</b>
-	
-	<i>🕵لیست</i> <code>10</code> <i>کاربر بن شده: </i>
-	$botsssban","html","true");
-	}
-	//============
-	elseif($text == '⚠️راهنما' and $from_id == $admin and $type == "private"){
-	
-	SendMessage($chat_id,"راهنمای ربات:
-حساب های رایگان:
-
-<code>/ban:</code>
-<i>ریپلای روی پیام مورد نظر و ارسال این عبارت برای بلاک کردن کاربر از ربات</i>
-<code>/unban:</code>
-<i>ریپلای روی پیام مورد نظر و ارسال این عبارت برای آنبلاک کردن کاربر از ربات</i>
-<code>/share:</code>
-<i>ریپلای روی پیام مورد نظر و ارسال این عبارت برای ارسال شماره شما که در کانتکت تنظیم کرده اید</i>
-<code>/ban </code><b>USERNAME</b><code>:</code>
-<i>بلاک کردن شخص مورد نظر از ربات با یوزرنیم یا آیدی</i>
-<code>/unban </code><b>USERNAME</b><code>:</code>
-<i>آنبلاک کردن شخص مورد نظر از ربات با یوزرنیم یا آیدی</i>
-
-<i>استفاده در هرجایی که جایگزین مقدار اصلیش میشه:</i>
-<code>FIRSTNAME:</code> <i>نام</i>
-<code>LASTNAME:</code> <i>نام خانوادگی</i>
-<code>USERID:</code> <i>ایدی عددی</i>
-<code>USERNAME:</code> <i>یوزرنیم</i>
-<code>DATE:</code> <i>تاریخ</i>
-<code>TIME:</code> <i>ساعت</i>
-
-","html","true",$back);
-	}
-	//============
-
-elseif ($text == 'کاربران اخیر') {
-    $count = count($list['user'])-12;
-    $lastmem = null;
-    foreach ($list['user'] as $key => $value) {
-        if ($count <= $key) {
-            $lastmem .= "[$value](tg://user?id=$value) | ";
-            $key++;
-        }
-    }
-    SendMessage($chat_id, "■ لیست 12 کاربر اخیر ربات به شرح ذیل می باشد :\n$lastmem", 'MarkDown', $message_id);
+امروز : $date",
+  "MarkDown",
+  $bargasht);
 }
-
-	elseif($text == '🉑پاسخ سریع' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type == 'gold'){
-	SendMessage($chat_id,"<i>🉑 یکی از دکمه های زیر رو انتخاب کنید:</i>","html","true",$button_pasokh);
-	}else{
-	SendMessage($chat_id,"دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}
-	}
-	elseif($text == '⏹اضافه کردن کلمه' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","set word");
-	
-	SendMessage($chat_id,"<i>⏹ کلمه مورد نظر رو وارد کنید:</i>","html","true",$button_back);
-	}
-	elseif($command == 'set word' and $from_id == $admin and $type == "private"){
-	if($text != null){
-	save("other/command.txt","set word2");
-	save("other/wait.txt",$text);
-	
-	SendMessage($chat_id,"<i>⏹ پس از ارسال این متن چه متنی نمایش داده شود:
-	🚫 توجه کنید فقط میتوانید متنی نمایش دهید.</i>","html","true",$button_back);
-	}else{
-	save("other/command.txt","set word");
-	
-	SendMessage($chat_id,"<i>🚫 فقط میتوانید متنی ذخیره کنید:</i>","html","true",$button_back);
-	}
-	}
-	elseif($command == 'set word2' and $from_id == $admin and $type == "private"){
-	if($text != null){
-	$button = str_replace("// pasokh sarih","[['text'=>'$wait']],// pasokh sarih",$class);
-	save("other/Button.php",$button);
-	save("other/command.txt","none");
-	save("other/wordlist/$wait.txt",$text);
-	
-	SendMessage($chat_id,"<i>⏹ ثبت شد.</i>","html","true",$button_pasokh);
-	}else{
-	save("other/command.txt","set word2");
-	
-	SendMessage($chat_id,"<i>🚫 فقط میتوانید متنی ذخیره کنید:</i>","html","true",$button_back);
-	}
-	}
-	elseif($text == '⏹حذف کلمه' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","del word");
-	
-	SendMessage($chat_id,"<i>⏹ کلمه مورد نظر رو انتخاب کنید:</i>","html","true",$button_pasokh_sarih);
-	}
-	elseif($command == 'del word' and $from_id == $admin and $type == "private"){
-	unlink("other/wordlist/$text.txt");
-	$button = str_replace("[['text'=>'$text']],","",$class);
-	save("other/Button.php",$button);
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>⏹ کلمه مورد نظر از لیست پاسخ سریع حذف گردید:</i>","html","true",$button_pasokh);
-	}
-	//=============
-	elseif($text == '📫پروفایل' and $from_id == $admin and $type == "private"){
-	
-	SendMessage($chat_id,"<i>📫 یکی از دکمه های زیر رو انتخاب کنید:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == 'چند نفرن' and $from_id == $admin and $type == "private"){
-	
-	$countban = count(array_unique($list['ban']));
-    $countuser = 0;
-    foreach (glob('data/*') as $dir) {
-        if (is_dir($dir)) {
-            $countuser++;
-        }
-    }
-    $countupdate = $alidata['count']['update'];
-    SendMessage($chat_id, "■ تعداد کل اعضای ربات : *$countuser*\n■ تعداد افراد مسدود شده : *$countban*\n■ کل آپدیت های ارسالی از سمت تلگرام : *$countupdate*", 'MarkDown', $message_id);
-    }
+elseif($data == "proxygive"){
     
-if (!in_array($from_id, $list['user']) and !is_null($from_id)) {
-    mkdir("data/$from_id");
-    if ($list['user'] == null) {
-        $list['user'] = [];
-    }
-    array_push($list['user'], $from_id);
-    file_put_contents("data/list.json", json_encode($list));
+ file_put_contents("data.json",json_encode($dataa));
+ 
+ $get = json_decode(file_get_contents("https://api.hajiapi.tk/proxy"));
+ 
+$result= objectToArrays($get,true);
+
+$ser1= $result['Result']['0']['server'];
+$ser2 = $result['Result']['0']['port'];
+$ser3 = $result['Result']['0']['secret'];
+$ser4 = $result['Result']['2']['server'];
+$ser5 = $result['Result']['2']['port'];
+$ser6 = $result['Result']['2']['secret'];
+$ser7 = $result['Result']['3']['server'];
+$ser8 = $result['Result']['3']['port'];
+$ser9 = $result['Result']['3']['secret'];
+$ser10 = $result['Result']['4']['server'];
+$ser11 = $result['Result']['4']['port'];
+$ser12 = $result['Result']['4']['secret'];
+$ser13 = $result['Result']['5']['server'];
+$ser14 = $result['Result']['5']['port'];
+$ser15 = $result['Result']['5']['secret'];
+$ser16 = $result['Result']['6']['server'];
+$ser17 = $result['Result']['6']['port'];
+$ser18 = $result['Result']['6']['secret'];
+$ser19 = $result['Result']['7']['server'];
+$ser20 = $result['Result']['7']['port'];
+$ser21 = $result['Result']['7']['secret'];
+$ser22 = $result['Result']['8']['server'];
+$ser23 = $result['Result']['8']['port'];
+$ser24 = $result['Result']['8']['secret'];
+$ser25 = $result['Result']['9']['server'];
+$ser26 = $result['Result']['9']['port'];
+$ser27 = $result['Result']['9']['secret'];
+$ser28 = $result['Result']['10']['server'];
+$ser29 = $result['Result']['10']['port'];
+$ser30 = $result['Result']['10']['secret'];
+    
+bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"🌟این لیست هر ده دقیقه به روز میشود🌟",
+  'parse_mode'=>"MarkDown"
+ ,'reply_markup'=>json_encode
+ (['inline_keyboard'=>[
+     
+[['text'=>"proxy1⁩",'url'=>"https://t.me/proxy?server=$ser1&port=$ser2&secret=$ser3"]],
+[['text'=>"proxy2",'url'=>"https://t.me/proxy?server=$ser4&port=$ser5&secret=$ser6"],
+['text'=>"proxy3",'url'=>"https://t.me/proxy?server=$ser7&port=$ser8&secret=$ser9"]],
+[['text'=>"proxy4⁩",'url'=>"https://t.me/proxy?server=$ser10&port=$ser11&secret=$ser12"],
+['text'=>"proxy5⁩",'url'=>"https://t.me/proxy?server=$ser13&port=$ser14&secret=$ser15"]]  , 
+[['text'=>"⁦proxy6⁩",'url'=>"https://t.me/proxy?server=$ser16&port=$ser17&secret=$ser18"],
+['text'=>"proxy7",'url'=>"https://t.me/proxy?server=$ser19&port=$ser20&secret=$ser21"]],
+[['text'=>"proxy8",'url'=>"https://t.me/proxy?server=$ser22&port=$ser23&secret=$ser24"],
+['text'=>"proxy9",'url'=>"https://t.me/proxy?server=$ser25&port=$ser26&secret=$ser27"]],
+[['text'=>"proxy10",'url'=>"https://t.me/proxy?server=$ser28&port=$ser29&secret=$ser30"]],
+],'resize_keyboard'=>true
+])
+]);
 }
-	elseif($text == '🅾نام' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set name");
-	
-	SendMessage($chat_id,"<i>🅾 نام خود را وارد کنید:</i>","html","true",$button_back_prof);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set name'){
-	save("other/command.txt","none");
-	unlink("other/profile/name.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set name' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/name.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾سن' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set age");
-	
-	SendMessage($chat_id,"<i>🅾 سن خود را وارد کنید:</i>","html","true",$button_profile_age);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set age'){
-	save("other/command.txt","none");
-	unlink("other/profile/age.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set age' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/age.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾محل سکونت' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set mah");
-	
-	SendMessage($chat_id,"<i>🅾 محل سکونت خود را وارد کنید:</i>","html","true",$button_profile_location);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set mah'){
-	save("other/command.txt","none");
-	unlink("other/profile/location.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set mah' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/location.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾تحصیلات' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set tah");
-	
-	SendMessage($chat_id,"<i>🅾 تحصیلات خود را وارد کنید:</i>","html","true",$button_profile_tah);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set tah'){
-	save("other/command.txt","none");
-	unlink("other/profile/tah.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set tah' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/tah.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾شماره' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set phone");
-	
-	SendMessage($chat_id,"<i>🅾 شماره خود را وارد کنید:</i>","html","true",$button_back_prof);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set phone'){
-	save("other/command.txt","none");
-	unlink("other/profile/phone.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set phone' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/phone.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾وضعیت' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set stats");
-	
-	SendMessage($chat_id,"<i>🅾 وضعیت رابطه ی خود را وارد کنید:</i>","html","true",$button_profile_stats);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set stats'){
-	save("other/command.txt","none");
-	unlink("other/profile/stats.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set stats' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/stats.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾کانال' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set channel");
-	
-	SendMessage($chat_id,"<i>🅾 کانال خود را وارد کنید:</i>","html","true",$button_back_prof);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set channel'){
-	save("other/command.txt","none");
-	unlink("other/profile/channel.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set channel' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/channel.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾اینستاگرام' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set insta");
-	
-	SendMessage($chat_id,"<i>🅾 آیدی اینستاگرام خود را وارد کنید:</i>","html","true",$button_back_prof);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set insta'){
-	save("other/command.txt","none");
-	unlink("other/profile/insta.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set insta' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/insta.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '🅾سایت' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set site");
-	
-	SendMessage($chat_id,"<i>🅾 آدرس سایت خود را وارد کنید:</i>","html","true",$button_back_prof);
-	}
-	elseif($text == '📛حذف' and $from_id == $admin and $type == "private" and $command == 'set site'){
-	save("other/command.txt","none");
-	unlink("other/profile/site.txt");
-	
-	SendMessage($chat_id,"<i>📛 حذف شد:</i>","html","true",$button_profile);
-	}
-	elseif($command == 'set site' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/profile/site.txt",$text);
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد:</i>","html","true",$button_profile);
-	}
-	//=============
-	elseif($text == '👁‍🗨مشاهده مشخصات' and $from_id == $admin and $type == "private"){
-	
-	$protxt = '';
-	if ($_name != ''){
-		$protxt = $_name;
-	}if ($_age != ''){
-		$protxt = $protxt."\n".$_age.' ساله';
-	}if ($_location != ''){
-		$protxt = $protxt."\nاز ".$_location;
-	}if ($_tah != ''){
-		  $protxt = $protxt."\n".$_tah;
-	}if ($_stats != ''){
-		  $protxt = $protxt."\n".$_stats;
-	}if ($_phone != ''){
-		  $protxt = $protxt."\n<b>Tel:</b> ".$_phone;
-	}if ($_insta != ''){
-		  $protxt = $protxt."\n<b>insta:</b> ".$_insta;
-	}if ($_channel != ''){
-		 $protxt = $protxt."\n<b>Channel:</b> ".$_channel;
-	}if ($_site != ''){
-		  $protxt = $protxt."\n<b>Site:</b> ".$_site;
-		  }
-	if($_name == ''){
-	SendMessage($chat_id,"<i>🚫 نام حتما باید تنظیم شده باشد:</i>","html","true",$button_profile);
-	}elseif($_name == '' and $_age == '' and $_location == '' and $_tah == '' and $_phone == '' and $_stats == '' and $_insta == '' and $_channel == '' and $_site == ''){
-	SendMessage($chat_id,"<i>پروفایل خالی است...</i>","html","true",$button_profile);
-	}else{
-	SendMessage($chat_id,"$protxt","html","true",$button_profile);
-	}
-	}
-	//=============
-	elseif($text == '☎️کانتکت' and $from_id == $admin and $type == "private"){
-	
-	SendMessage($chat_id,"<i>☎️ یکی از گزینه های زیر را وارد کنید:</i>","html","true",$button_contact);
-	}
-	elseif($text == '👁‍🗨نمایش شماره شما' and $from_id == $admin and $type == "private"){
-	if($_cname == null){
-	
-	SendMessage($chat_id,"<i>❌ شماره شما ثبت نشده.</i>","html","true");
-	}else{
-	SendContact($chat_id,$_cname,$_number);
-	}
-	}
-	elseif($ccontact != null and $from_id == $admin and $type == "private"){
-	save("other/setting/cname.txt",$cname);
-	save("other/setting/number.txt",$cnumber);
-	
-	SendMessage($chat_id,"<i>✅شماره شما ثبت شد.</i>","html","true",$button_contact);
-	}
-	//=============
-	
-	elseif($text == '❇️متن پیشفرض' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set text pish");
-	
-	SendMessage($chat_id,"<i>❇️ متن جدید را وارد کنید.
-	❇️ متن فعلی:</i>
-	
-	$_send","html","true",$button_back);
-	}
-	elseif($command == 'set text pish' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/setting/send.txt","$text");
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد.</i>","html","true",$button_official);
-	}
-	//=============
-	elseif($text == '🆕متن استارت' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","set text start");
-	
-	SendMessage($chat_id,"<i>🆕 متن جدید را وارد کنید.
-	🆕 متن فعلی:</i> 
-	
-	$_start","html","true",$button_back);
-	}
-	elseif($command == 'set text start' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	save("other/setting/start.txt","$text");
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد.</i>","html","true",$button_official);
-	}
-	//=============
-	elseif($text == '📂پشتیبان گیری' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}else{
-	$group = file_get_contents("other/access/Group.txt");
-	$user = file_get_contents("other/access/Member.txt");
-	$protxt = '';
-	if ($_name != ''){
-		$protxt = $_name;
-	}if ($_age != ''){
-		$protxt = $protxt."\n".$_age.' ساله';
-	}if ($_location != ''){
-		$protxt = $protxt."\nاز ".$_location;
-	}if ($_tah != ''){
-		  $protxt = $protxt."\n".$_tah;
-	}if ($_stats != ''){
-		  $protxt = $protxt."\n".$_stats;
-	}if ($_phone != ''){
-		  $protxt = $protxt."\nTel: ".$_phone;
-	}if ($_insta != ''){
-		  $protxt = $protxt."\ninsta: ".$_insta;
-	}if ($_channel != ''){
-		 $protxt = $protxt."\nChannel: ".$_channel;
-	}if ($_site != ''){
-		  $protxt = $protxt."\nSite: ".$_site;
-		  }
-	save("Member.txt",$user);
-	save("Group.txt",$group);
-	save("Send.txt",$_send);
-	save("Start.txt",$_start);
-	save("Profile.txt",$protxt);
-	
-	SendMessage($chat_id,"<i>⏳ کمی صبر کنید.</i>","html","true");
-	SendChatAction($chat_id,"upload_document");
-	sleep(5);
-	$files_to_zip = array(
-    'Group.txt',
-	'Member.txt',
-	'Start.txt',
-	'Send.txt',
-	'Profile.txt'
-	);
-	$result = create_zip($files_to_zip,'@file.zip');
-	SendDocument($chat_id,new CURLFILE("@file.zip"),'','succsess');
-	unlink("@file.zip");
-	unlink("Group.txt");
-	unlink("Member.txt");
-	unlink("Start.txt");
-	unlink("Send.txt");
-	unlink("Profile.txt");
-	}
-	}
-	//=============
-	elseif($text == '🔲مدیریت دکمه ها' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type == 'gold'){
-	SendMessage($chat_id,"<i>🔲 یکی از دکمه های زیر رو انتخاب کنید:</i>","html","true",$button_dokme);
-	}else{
-	SendMessage($chat_id,"دوست عزیز جهت ویژه کردن ربات خود به پشتیبانی مراجعه کنید👇","html","true",$button_official);
-	}
-	}	
-	elseif($text == '⏸دکمه های سیستمی' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	
-	SendMessage($chat_id,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>","html","true",$button_setting_dokme);
-	}
-	elseif($text == '⏸اضافه کردن دکمه' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add button");
-	
-	SendMessage($chat_id,"<i>⏸ اسم دکمه رو وارد کنید:</i>","html","true",$button_back);
-	}
-	elseif($command == 'add button' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	if (strpos($class , "[['text'=>'$text']]") !== false) {
-	save("other/command.txt","add button");
-	
-	SendMessage($chat_id,"<i>⏸ دکمه ای با این نام وجود دارد.
-	⏸ یک نام دیگر وارد کنید:</i>","html","true",$button_back);
-	}else{
-	save("other/command.txt","add button2");
-	save("other/wait.txt",$text);
-	
-	SendMessage($chat_id,"<i>⏸ میخواهید دکمه به کجا اضافه شود:</i>","html","true",$button_dokme_sakht);
-	}
-	}
-	elseif($command == 'add button2' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add button3");
-	save("other/id.txt",$text);
-	
-	SendMessage($chat_id,"<i>⏸ حالا پاسخی برای این دکمه تعریف کنید:
-	⏸ پاسخ در هر قالبی میتواند باشد.از فوروارد هم میتوانید استفاده کنید.
-	⏸ همچنین میتوانید از آدرس اینترنتی یا از آدرس اینستاگرام استفاده کنید
-	⏸ توجه کنید آدرس اینستاگرام حتما باید آدرس یک پست باشد</i>","html","true",$button_addbutton);
-	}
-	
-	elseif($text == '🌐آدرس اینترنتی' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add button4");
-	
-	SendMessage($chat_id,"<i>⏸ آدرس مورد نظر رو وارد کنید:
-	⏸ پسوند های مجاز:</i>
-	⏸ <code>webp , mp4 , ogg , zip , gif , pdf , mp3 , png , jpg</code>","html","true",$button_back);
-	}
-	
-	elseif($text == '🈁آدرس فید' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add button6");
-	
-	SendMessage($chat_id,"<i>🈁 آدرس مورد نظر رو وارد کنید:</i>","html","true",$button_back);
-	}
-	
-	elseif($text == '💠اینستاگرام' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add button5");
-	
-	SendMessage($chat_id,"<i>⏸ آدرس پست اینستاگرام رو وارد کنید:</i>","html","true",$button_back);
-	}
-	
-	elseif($command == 'add button6' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","none");
-	$rss = file_get_contents("http://api.norbert-team.ir/feedkhan/?post=10&rss=$text");
-	if($rss != null){
-	if($iduser == '🔼بالا'){
-	$button = str_replace("// dokme bala","// dokme bala
-	[['text'=>'$wait']],",$class);
-	save("other/Button.php",$button);
-	}else{
-	$button = str_replace("// dokme paiin","[['text'=>'$wait']],// dokme paiin",$class);
-	save("other/Button.php",$button);
-	}
-	
-	SendMessage($chat_id,"<i>🈁 آدرس مورد نظر ثبت شد:</i>","html","true",$button_dokme);
-	save("other/button/feed/$wait.txt",$rss);
-	}else{
-	save("other/command.txt","add button6");
-	
-	SendMessage($chat_id,"<i>🈁 آدرس مورد نظر اشتباه است:</i>","html","true",$button_back);
-	}
-	}
-	
-	elseif($command == 'add button5' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","none");
-	$down = json_decode(file_get_contents("https://api.feelthecode.xyz/instagram/?url=$text"));
-	if($down->ok == true){
-	if($iduser == '🔼بالا'){
-	$button = str_replace("// dokme bala","// dokme bala
-	[['text'=>'$wait']],",$class);
-	save("other/Button.php",$button);
-	}else{
-	$button = str_replace("// dokme paiin","[['text'=>'$wait']],// dokme paiin",$class);
-	save("other/Button.php",$button);
-	}
-	
-	SendMessage($chat_id,"<i>⏸ کمی صبر کنید تا فایل آپلود شود برای شما:</i>","html","true",$button_back);
-	$url = $down->url;
-	if($down->is_video == true){
-	save("other/button/video/$wait.txt",$text);
-	SendVideo($chat_id,$url);
-	}elseif($down->is_photo == true){
-	save("other/button/photo/$wait.txt",$text);
-	SendPhoto($chat_id,$url);
-	}
-	
-	SendMessage($chat_id,"<i>⏸ فایل مورد نظر ثبت شد:</i>","html","true",$button_dokme);
-	}else{
-	save("other/command.txt","add button5");
-	
-	SendMessage($chat_id,"<i>⏸ آدرس پست اینستاگرام رو وارد کنید:
-	⏸ آدرس اینستاگرام اشتباه است</i>","html","true",$button_back);
-	}
-	}
-	
-	elseif($command == 'add button4' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","none");
-	$file = pathinfo($text);
-	$ext = $file['extension'];
-	if($ext == 'webp' || $ext == 'mp4' || $ext == 'ogg' || $ext == 'zip' || $ext == 'gif' || $ext == 'pdf' || $ext == 'mp3' || $ext == 'png' || $ext == 'jpg'){
-	if($iduser == '🔼بالا'){
-	$button = str_replace("// dokme bala","// dokme bala
-	[['text'=>'$wait']],",$class);
-	save("other/Button.php",$button);
-	}else{
-	$button = str_replace("// dokme paiin","[['text'=>'$wait']],// dokme paiin",$class);
-	save("other/Button.php",$button);
-	}
-	
-	SendMessage($chat_id,"<i>⏸ کمی صبر کنید تا فایل آپلود شود برای شما:</i>","html","true",$button_back);
-	if($ext == 'webp'){
-	save("other/button/sticker/$wait.txt",$text);
-	SendSticker($chat_id,$text);
-	}
-	elseif($ext == 'mp4'){
-	save("other/button/video/$wait.txt",$text);
-	SendVideo($chat_id,$text);
-	}
-	elseif($ext == 'ogg'){
-	save("other/button/voice/$wait.txt",$text);
-	SendVoice($chat_id,$text);
-	}
-	elseif($ext == 'zip' || $ext == 'pdf' || $ext == 'gif'){
-	save("other/button/file/$wait.txt",$text);
-	SendDocument($chat_id,$text);
-	}
-	elseif($ext == 'mp3'){
-	save("other/button/music/$wait.txt",$text);
-	SendAudio($chat_id,$text);
-	}
-	elseif($ext == 'png' || $ext == 'jpg'){
-	save("other/button/photo/$wait.txt",$text);
-	SendPhoto($chat_id,$text);
-	}
-	
-	SendMessage($chat_id,"<i>⏸ فایل مورد نظر ثبت شد:</i>","html","true",$button_dokme);
-	}else{
-	save("other/command.txt","add button4");
-	
-	SendMessage($chat_id,"<i>⏸ پسوند نا معتبر
-	⏸ پسوند های مجاز:</i>
-	⏸ <code>webp , mp4 , ogg , zip , gif , pdf , mp3 , png , jpg</code>","html","true",$button_back);
-	}
-	}
-	
-	elseif($command == 'add button3' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","none");
-	if($iduser == '🔼بالا'){
-	$button = str_replace("// dokme bala","// dokme bala
-	[['text'=>'$wait']],",$class);
-	save("other/Button.php",$button);
-	}else{
-	$button = str_replace("// dokme paiin","[['text'=>'$wait']],// dokme paiin",$class);
-	save("other/Button.php",$button);
-	}
-	if($forward_from != null || $forward_from_chat != null){
-	save("other/button/forward/$wait.txt",$message_id);
-	}
-	elseif($sticker_id != null){
-	save("other/button/sticker/$wait.txt",$sticker_id);
-	}
-	elseif($video_id != null){
-	save("other/button/video/$wait.txt",$video_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($voice_id != null){
-	save("other/button/voice/$wait.txt",$voice_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($file_id != null){
-	save("other/button/file/$wait.txt",$file_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($music_id != null){
-	save("other/button/music/$wait.txt",$music_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($text != null){
-	save("other/button/text/$wait.txt",$text);
-	}
-	elseif($photo2_id != null){
-	save("other/button/photo/$wait.txt",$photo2_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($photo1_id != null){
-	save("other/button/photo/$wait.txt",$photo1_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	elseif($photo0_id != null){
-	save("other/button/photo/$wait.txt",$photo0_id);
-	save("other/button/caption/$wait.txt",$caption);
-	}
-	
-	SendMessage($chat_id,"<i>⏸ دکمه مورد نظر ساخته شد.</i>","html","true",$button_dokme);
-	}
-	elseif($text == '⏸حذف دکمه' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","rem button");
-	
-	SendMessage($chat_id,"<i>⏸ دکمه مورد نظر را انتخاب کنید:</i>","html","true",$button_dokme_remove);
-	}
-	elseif($command == 'rem button' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","none");
-	$button = str_replace("[['text'=>'$text']],",'',$class);
-	save("other/Button.php",$button);
-	unlink("other/button/feed/$text.txt");
-	unlink("other/button/sticker/$text.txt");
-	unlink("other/button/video/$text.txt");
-	unlink("other/button/voice/$text.txt");
-	unlink("other/button/file/$text.txt");
-	unlink("other/button/music/$text.txt");
-	unlink("other/button/photo/$text.txt");
-	unlink("other/button/caption/$text.txt");
-	unlink("other/button/forward/$text.txt");
-	unlink("other/button/text/$text.txt");
-	
-	SendMessage($chat_id,"<i>⏸ دکمه مورد نظر حذف شد.</i>","html","true",$button_dokme);
-	}
-	//============
-	elseif($data == "location"){
-	if($location == '✅'){
-	save("other/setting/location.txt","⛔️");
-	$button = str_replace("[['text'=>'⛪️ارسال مکان شما','request_location' => true]],","",$class);
-	save("other/Button.php",$button);
-	AnswerCallbackQuery($data_id,"⛔️ دکمه ارسال مکان پاک شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_loc_off);
-	}else{
-	$button = str_replace("// prt","[['text'=>'⛪️ارسال مکان شما','request_location' => true]],// prt",$class);
-	save("other/Button.php",$button);
-	save("other/setting/location.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ دکمه ارسال مکان اضافه شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_loc_on);
-	}
-	}
-	//============
-	elseif($data == "profile"){
-	if($profile == '✅'){
-	save("other/setting/profile.txt","⛔️");
-	$button = str_replace("[['text'=>'📬پروفایل']],","",$class);
-	save("other/Button.php",$button);
-	AnswerCallbackQuery($data_id,"⛔️ دکمه پروفایل پاک شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_prof_off);
-	}else{
-	$button = str_replace("// prt","[['text'=>'📬پروفایل']],// prt",$class);
-	save("other/Button.php",$button);
-	save("other/setting/profile.txt","✅");
-	AnswerCallbackQuery($data_id,"✅ دکمه پروفایل اضافه شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_prof_on);
-	}
-	}
-	//============
-	elseif($data == "contact"){
-	if($contact == '✅'){
-	save("other/setting/contact.txt","⛔️");
-	$button = str_replace("[['text'=>'☎️ارسال شماره شما','request_contact' => true]],","",$class);
-	save("other/Button.php",$button);
-	AnswerCallbackQuery($data_id,"⛔️ دکمه ارسال شماره پاک شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_con_off);
-	}else{
-	save("other/setting/contact.txt","✅");
-	$button = str_replace("// prt","[['text'=>'☎️ارسال شماره شما','request_contact' => true]],// prt",$class);
-	save("other/Button.php",$button);
-	AnswerCallbackQuery($data_id,"✅ دکمه ارسال شماره اضافه شد");
-	EditMessageText($chatid,$message_id_call,"<i>⏸ یکی از دکمه های زیر را انتخاب کنید:</i>",'html','true',$button_setting_dokme_con_on);
-	}
-	}
-	//============
-	elseif($text == '🆙ارتقا ربات' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type == 'gold'){
-	SendMessage($chat_id,"<i>⚜ حساب شما ویژه میباشد.</i>","html","true");
-	}else{
-	SendMessage($chat_id,"⚜دوست عزیز حساب های ویژه قابلیت های زیر را دارا میباشند:
-
-⭕️ تمامی تبلیغات از ربات شما پاک میشود
-⭕️ ساخت دکمه بصورت نامحدود با نمایش پیام در هر قالبی،از فوروارد هم میتونید استفاده کنید
-⭕️ ساخت دکمه بصورت نامحدود با نمایش پیام از آدرس اینترنتی(URL) یا از پست اینستاگرام
-⭕️ پاسخ سریع با نمایش پیام فقط در قالب متن
-⭕️ پیام همگانی با پیام در هر قالبی
-⭕️ فوروارد همگانی
-⭕️ اضافه کردن ادمین به هر تعداد
-⭕️ تنظیم گروه پشتیبانی برای فوروارد پیام ها
-⭕️ پشتیبان گیری از کاربران ، گروه ها و تنظیمات در در یک فایل زیپ
-⭕️ حذف/اضافه دکمه های سیستمی که شامل پروفایل،ارسال مکان و ارسال شماره توسط کاربر میشه
-⭕️ همگانی و عکس زیر متن
-⭕️ همگانی و فایل زیر متن
-⭕️ دانلود از اینستاگرام
-⭕️ دانلود هر فایلی و آپلود توی تلگرام
-⭕️ آپلود داخلی هر فایلی
-⭕️ خاموش و روشن کردن ربات
-⭕️ تنظیم کانال مربوطه برای همگانی ها
-⭕️ و ...
-","html","true");
-	}
-	}
-	//============
-	elseif($text == '🔴ریست کردن' and $from_id == $admin and $type == "private"){
-	
-	SendMessage($chat_id,"<i>🔴 آیا مایل به انجام این کار هستید؟
-	🔴 توجه کنید تمام تنطیمات به پیشفرض برگشته و تمامی اطلاعات مربوط به ربات شما پاک میشود.اعضا و گروه ها پاک نمیشوند.</i>","html","true",$button_reset);
-	}
-	elseif($text == '✅بله مایل هستم' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	save("other/setting/start.txt","Hi!✋
-<code>Welcome To My Bot:)</code>");
-    save("other/setting/send.txt","<b>Sent To My Admin!</b>");
-	unlink("other/profile/name.txt");
-	unlink("other/profile/age.txt");
-	unlink("other/profile/location.txt");
-	unlink("other/profile/tah.txt");
-	unlink("other/profile/phone.txt");
-	unlink("other/profile/stats.txt");
-	unlink("other/profile/insta.txt");
-	unlink("other/profile/channel.txt");
-	unlink("other/profile/site.txt");
-	save("other/setting/sticker.txt","✅");
-	save("other/setting/file.txt","✅");
-	save("other/setting/aks.txt","✅");
-	save("other/setting/music.txt","✅");
-	save("other/setting/film.txt","✅");
-	save("other/setting/voice.txt","✅");
-	save("other/setting/join.txt","✅");
-	save("other/setting/link.txt","✅");
-	save("other/setting/forward.txt","✅");
-	save("other/setting/pm_forward.txt","⛔️");
-	save("other/setting/pm_resani.txt","✅");
-	sleep(2);
-	SendMessage($chat_id,"<i>✅ تنظیمات ربات شما به پیشفرض برگشت.</i>","html","true",$button_official);
-	}
-	//============
-	elseif($text == '📮پیام به کاربر' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","send user");
-	
-	SendMessage($chat_id,"<i>📮 لطفا یوزر آیدی یا یوزرنیم شخص مورد نظر را وارد کنید. یا پیامی از شخص مورد نظر فوروارد کنید. مثال:</i>
-	<code>12345678
-	@UserName</code>","html","true",$button_back);
-	}
-	elseif($command == 'send user' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","send user2");
-	if($forward_from != null){
-	save("other/id.txt",$forward_from_id);
-	}else{
-	save("other/id.txt",$text);	
-	}
-	
-	SendMessage($chat_id,"<i>📮 حالا پیام مورد نظر را در هر قالبی ارسال کنید:
-	📮 میتوانید فوروارد کنید.</i>","html","true",$button_back);
-	}
-	elseif($command == 'send user2' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	SendMessage($chat_id,"<i>✅ ارسال شد.</i>","html","true",$button_official);
-	$id = json_decode(file_get_contents("https://api.pwrtelegram.xyz/bot$TOKEN/getChat?chat_id=$iduser"));
-	$user = $id->result->id;
-	if($id->result->id != null){
-		
-	if($forward_from != null){
-	ForwardMessage($user,$chat_id,$message_id);
-	}
-	elseif($video_id != null){
-	SendVideo($user,$video_id,$caption);
-	}
-	elseif($voice_id != null){
-	SendVoice($user,$voice_id,'',$caption);
-	}
-	elseif($file_id != null){
-	SendDocument($user,$file_id,'',$caption);
-	}
-	elseif($music_id != null){
-	SendAudio($user,$music_id,'',$caption);
-	}
-	elseif($photo2_id != null){
-	SendPhoto($user,$photo2_id,'',$caption);
-	}
-	elseif($photo1_id != null){
-	SendPhoto($user,$photo1_id,'',$caption);
-	}
-	elseif($photo0_id != null){
-	SendPhoto($user,$photo0_id,'',$caption);
-	}
-	elseif($text != null){
-	SendMessage($user,$text,"html","true");
-	}
-	elseif($sticker_id != null){
-	SendSticker($user,$sticker_id);
-	}
-	}else{
-	SendMessage($chat_id,"<i>📮 متاسفانه خطایی رخ داده است.</i>","html","true",$button_official);
-	}
-	}
-	//============
-	elseif($text == '👱ادمین ها' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type != 'gold'){
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true");
-	}else{
-	SendMessage($chat_id,"<i>👱 یکی از دکمه های زیر را انتخاب کنید:</i>","html","true",$button_admin);
-	}
-	}
-	elseif($text == '⏺اضافه کردن ادمین' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","add admin");
-	
-	SendMessage($chat_id,"<i>⏺ آیدی عددی شخص را وارد کنید.یا پیامی از شخص مورد نظر فوروارد کنید:</i>","html","true",$button_back);
-	}
-	elseif($command == 'add admin' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	if($forward_from != null){
-	$fir = getChat($forward_from_id);
-	$txxt = file_get_contents('other/access/AdminList.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($forward_from_id,$pmembersid)){
-      $aaddd = file_get_contents('other/access/AdminList.txt');
-      $aaddd .= $forward_from_id."\n";
-		file_put_contents('other/access/AdminList.txt',$aaddd);
-    }
-	}else{
-	$fir = getChat($text);
-	$txxt = file_get_contents('other/access/AdminList.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($text,$pmembersid)){
-      $aaddd = file_get_contents('other/access/AdminList.txt');
-      $aaddd .= $text."\n";
-		file_put_contents('other/access/AdminList.txt',$aaddd);
-    }
-	}
-	SendMessage($chat_id,"<i>⏺ ایشون ($fir) به ادمین ها اضافه شد:</i>","html","true",$button_admin);
-	}
-	elseif($text == '⏺حذف ادمین' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	save("other/command.txt","rem admin");
-	
-	SendMessage($chat_id,"<i>⏺ آیدی عددی شخص را وارد کنید.یا پیامی از شخص مورد نظر فوروارد کنید:</i>","html","true",$button_back);
-	}
-	elseif($command == 'rem admin' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	if($forward_from != null){
-	$rep = str_replace("$forward_from_id\n",'',$adminlist);
-	}else{
-	$rep = str_replace("$text\n",'',$adminlist);
-	}
-	save("other/access/AdminList.txt",$rep);
-	
-	SendMessage($chat_id,"<i>⏺ شخص مورد نظر از ادمین برداشته شد:</i>","html","true",$button_admin);
-	}
-	//=============
-	elseif($text == '📣تنظیم چنل' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}else{
-	save("other/command.txt","set channel fowr");
-	
-	SendMessage($chat_id,"<i>📣 متنی از چنل مورد نظر فوروارد کنید:
-	📣 توجه کنید حتما باید چنل عمومی باشد.</i>","html","true",$button_back);
-	}
-	}
-	elseif($command == 'set channel fowr' and $from_id == $admin and $type == "private"){
-	if($forward_from_chat == null || $from_chat_username == null || $from_chat_type != 'channel'){
-	
-	SendMessage($chat_id,"<i>📣 خطایی رخ داده است.
-	📣 توجه کنید حتما باید یک پیام از چنل فوروارد کنید و چنل عمومی باشد:</i>","html","true",$button_official);
-	}else{
-	save("other/command.txt","none");
-	save("other/setting/channelFWD.txt","@$from_chat_username");
-	
-	SendMessage($chat_id,"<i>✅ ثبت شد.</i>","html","true",$button_official);
-	}
-	}
-	//===========
-	elseif($text == '📤آپلود داخلی' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}else{
-	save("other/command.txt","upload file");
-	
-	SendMessage($chat_id,"<i>📤 لطفا هر چیزی رو جهت آپلود ارسال کنید.</i>","html","true",$button_back);
-	}
-	}
-	elseif($command == 'upload file' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	
-	if($sticker_id != null){$file = $sticker_id;}
-	elseif($video_id != null){$file = $video_id;}
-	elseif($voice_id != null){$file = $voice_id;}
-	elseif($file_id != null){$file = $file_id;}
-	elseif($music_id != null){$file = $music_id;}
-	elseif($photo2_id != null){$file = $photo2_id;}
-	elseif($photo1_id != null){$file = $photo1_id;}
-	elseif($photo0_id != null){$file = $photo0_id;}
-	
-	$get = botXYZ('getfile',['file_id'=>$file]);
-    $patch = $get->result->file_path;
-	
-	$file_link = 'https://storage.pwrtelegram.xyz/'.$patch;
-	$short = file_get_contents('https://3pls.ir/api.php?url='.$file_link);
-	SendMessage($chat_id,"📤 لینک فایل مورد نظر: 
-	📤 $short","html","false",$button_official);
-	}
-	//===========
-	elseif($text == '📥دانلودر' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}else{
-	save("other/command.txt","downloader instagram");
-	
-	SendMessage($chat_id,"<i>📥 لینک پست اینستاگرام رو ارسال کنید یا از آدرس اینترنتی استفاده کنید:
-	📥 پسوند های مجاز:</i>
-	📥 <code>webp , mp4 , ogg , zip , gif , pdf , mp3 , png , jpg</code>","html","true",$button_back);
-	}
-	}
-	elseif($command == 'downloader instagram' and $from_id == $admin and $type == "private"){
-	save("other/command.txt","none");
-	$file = pathinfo($text);
-	$ext = $file['extension'];
-	if($ext == 'webp' || $ext == 'mp4' || $ext == 'ogg' || $ext == 'zip' || $ext == 'gif' || $ext == 'pdf' || $ext == 'mp3' || $ext == 'png' || $ext == 'jpg'){
-	
-	SendMessage($chat_id,"<i>📥 کمی صبر کنید تا فایل آپلود شود برای شما:</i>","html","true",$button_official);
-	if($ext == 'webp'){
-	SendSticker($chat_id,$text);
-	}
-	elseif($ext == 'mp4'){
-	SendVideo($chat_id,$text);
-	}
-	elseif($ext == 'ogg'){
-	SendVoice($chat_id,$text);
-	}
-	elseif($ext == 'zip' || $ext == 'pdf' || $ext == 'gif'){
-	SendDocument($chat_id,$text);
-	}
-	elseif($ext == 'mp3'){
-	SendAudio($chat_id,$text);
-	}
-	elseif($ext == 'png' || $ext == 'jpg'){
-	SendPhoto($chat_id,$text);
-	}
-	}else{
-	$down = json_decode(file_get_contents("https://api.feelthecode.xyz/instagram/?url=$text"));
-		if($down->ok == true){
-		SendMessage($chat_id,"<b>📥 در حال دانلود...</b>","html","true");
-		$url = $down->url;
-		if($down->is_video == true){
-		SendVideo($chat_id,$url,"Video",$button_official);
-		}elseif($down->is_photo == true){	
-		SendPhoto($chat_id,$url,$button_official,"Photo");
-		}
-		}else{
-		save("other/command.txt","downloader instagram");
-	    
-	    SendMessage($chat_id,"<i>📥 لینک پست مورد نظر رو ارسال کنید یا از آدرس اینترنتی استفاده کنید:
-		📥 لینک مورد نظر اشتباه است.</i>","html","true",$button_back);
-		}
-	}
-	}
-	//===========
-	elseif($text == '✴️روشن کردن بات' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}else{
-	
-	save("other/command.txt","none");
-	save("other/setting/on-off.txt","true");
-	SendMessage($chat_id,"<i>✴️ ربات روشن شد.
-	✴️ از این پس میتوانند به شما پیام ارسال کنند.</i>","html","true",$button_official_off);
-	}
-	}
-	elseif($text == '⛔️خاموش کردن بات' and $from_id == $admin and $type == "private"){
-	if($bot_type != 'gold'){
-	
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}else{
-	
-	save("other/command.txt","none");
-	save("other/setting/on-off.txt","false");
-	SendMessage($chat_id,"<i>⛔ ️ربات خاموش شد.
-	⛔️ دیگر کسی نمیتواند برای شما پیام ارسال کند.</i>","html","true",$button_official_on);
-	}
-	}
-	//=============
-	elseif($text == '🔒قفل ربات' and $from_id == $admin and $type == "private"){
-	
-	if($bot_type == 'gold'){
-	SendMessage($chat_id,"<i>🔒 یکی از دکمه های زیر رو انتخاب کنید:</i>","html","true",$button_lock_bot);
-	}else{
-	SendMessage($chat_id,"<i>🚫 دوست عزیز حساب شما ویژه نیست.
-	🚫 برای ویژه کردن حساب خود به بخش ارتقا ربات مراجعه کنید.</i>","html","true",$button_official);
-	}
-	}
-	//=============
-	elseif($text == '🔒تنظیم' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	
-	save("other/command.txt","channel-lock");
-	SendMessage($chat_id,"<i>🔒 آدرس کانال مورد نظر را وارد کنید:
-	🔒 آدرس حتما باید با @ وارد شود.</i>","html","true",$button_back);
-	}
-	elseif($command == 'channel-lock' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	
-	$getMe = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/getMe"));
-	$id = $getMe->result->id;
-	$truechannel = json_decode(file_get_contents("https://api.telegram.org/bot$TOKEN/getChatMember?chat_id=$text&user_id=$id"));
-	$tch = $truechannel->result->status;
-	if($tch != 'administrator'){
-	SendMessage($chat_id,"<i>🔒 ربات ادمین کانال نیست.
-	🔒 ربات رو ادمین کرده و دوباره آدرس رو وارد کنید:</i>","html","true",$button_back);
-	}else{
-	save("other/command.txt","channel-lock");
-	save("other/setting/channel_lock.txt",$text);
-	SendMessage($chat_id,"<i>🔒 ثبت شد.</i>","html","true",$button_lock_bot);
-	}
-	}
-	elseif($text == '🔒حذف' and $from_id == $admin and $type == "private" and $bot_type == 'gold'){
-	
-	unlink("other/setting/channel_lock.txt");
-	SendMessage($chat_id,"<i>🔒 حذف شد.</i>","html","true",$button_lock_bot);
-	}
-	//===========
-	elseif(preg_match('/^\/([Bb]an) (.*)/',$text) and $from_id == $admin and $type == "private"){
-	preg_match('/^\/([Bb]an) (.*)/',$text,$match);
-	$id = json_decode(file_get_contents("https://api.pwrtelegram.xyz/bot$TOKEN/getChat?chat_id=".$match[2]));
-	$user = $id->result->id;
-	
-	if($user != null){
-	$txxt = file_get_contents('other/access/Block-List.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($user,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Block-List.txt');
-      $aaddd .= $user."\n";
-		file_put_contents('other/access/Block-List.txt',$aaddd);
-    }
-	SendMessage($chat_id,"🚫 کاربر مورد نظر بلاک شد.","html","true");
-	SendMessage($user,"🚫 شما بلاک شدین.","html","true");
-	}else{
-	SendMessage($chat_id,"🚫 متاسفانه خطایی رخ داده است.","html","true");
-	}
-	}
-	//===========
-	elseif(preg_match('/^\/([Uu]n[Bb]an) (.*)/',$text) and $from_id == $admin and $type == "private"){
-	preg_match('/^\/([Uu]n[Bb]an) (.*)/',$text,$match);
-	$id = json_decode(file_get_contents("https://api.pwrtelegram.xyz/bot$TOKEN/getChat?chat_id=".$match[2]));
-	$user = $id->result->id;
-	
-	if($user != null){
-	$rep = str_replace("$user\n",'',$block);
-	save("other/access/Block-List.txt",$rep);
-	SendMessage($chat_id,"✅کاربر مورد نظر آنبلاک شد.","html","true");
-	SendMessage($user,"✅شما آنبلاک شدین.","html","true");
-	}else{
-	SendMessage($chat_id,"🚫 متاسفانه خطایی رخ داده است.","html","true");
-	}
-	}
-	//==========
-	//End Button Source
-	elseif(file_exists("other/button/feed/$text.txt") and $type == "private"){
-	$rss = file_get_contents($_rss);
-	SendMessage($chat_id,$_rss,"html","true");
-	}
-	elseif(file_exists("other/button/sticker/$text.txt") and $type == "private"){
-	SendSticker($chat_id,$_sticker);
-	}
-	elseif(file_exists("other/button/video/$text.txt") and $type == "private"){
-	SendVideo($chat_id,$_video,$_caption);
-	}
-	elseif(file_exists("other/button/voice/$text.txt") and $type == "private"){
-	SendVoice($chat_id,$_voice,'',$_caption);
-	}
-	elseif(file_exists("other/button/file/$text.txt") and $type == "private"){
-	SendDocument($chat_id,$_file,'',$_caption);
-	}
-	elseif(file_exists("other/button/music/$text.txt") and $type == "private"){
-	SendAudio($chat_id,$_music,'',$_caption);
-	}
-	elseif(file_exists("other/button/photo/$text.txt") and $type == "private"){
-	SendPhoto($chat_id,$_photo,'',$_caption);
-	}
-	elseif(file_exists("other/button/forward/$text.txt") and $type == "private"){
-	ForwardMessage($chat_id,$admin,$_forward);
-	}
-	elseif(file_exists("other/button/text/$text.txt") and $type == "private"){
-	SendMessage($chat_id,$_text,"html","true");
-	}
-	//===========
-	elseif(file_exists("other/wordlist/$text.txt") and $type == "private"){
-	
-	SendMessage($chat_id,$_word,"html","true");
-	}
-	//===========
-	elseif($sticker_id != null and $sticker == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Sticker !!</b>","html","true");
-	}
-	elseif($video_id != null and $film == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Video !!</b>","html","true");
-	}
-	elseif($voice_id != null and $voice == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Voice !!</b>","html","true");
-	}
-	elseif($file_id != null and $file == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Document !!</b>","html","true");
-	}
-	elseif($music_id != null and $music == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Audio !!</b>","html","true");
-	}
-	elseif($photo2_id != null and $aks == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Photo !!</b>","html","true");
-	}
-	elseif($photo1_id != null and $aks == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Photo !!</b>","html","true");
-	}
-	elseif($photo0_id != null and $aks == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Photo !!</b>","html","true");
-	}
-	elseif($forward_from != null and $forward == "⛔️" and $from_id != $admin and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Forward !!</b>","html","true");
-	}
-	elseif($link == "⛔️" and $from_id != $admin and preg_match('/^([Hh]ttp|[Hh]ttps)(.*)/',$text) and $type == "private"){
-	SendMessage($chat_id,"<b>Locked Url !!</b>","html","true");
-	}
-	//============
-	elseif($data == "start chat"){
-	$rep = strchr($text_call,"ID:");
-	$rep = str_replace("ID: ",'',$rep);
-	$fir = getChat($rep);
-	$txxt = file_get_contents('other/access/Chat.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($rep,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Chat.txt');
-      $aaddd .= $rep."\n";
-		file_put_contents('other/access/Chat.txt',$aaddd);
-    }
-	AnswerCallbackQuery($data_id,"✅چت با $fir آغاز شد.");
-	EditMessageText($chatid,$message_id_call,"<i>✅چت آغاز شد.</i>",'html','true');
-	SendMessage($rep,"📪 چت آغاز شد.
-	📪 میتوانید چت کردن رو شروع کنید.","html","true");
-	}
-	//============
-	elseif($data == "end chat"){
-	$rep = strchr($text_call,"ID:");
-	$rep = str_replace("ID: ",'',$rep);
-	AnswerCallbackQuery($data_id,"🔴 درخواست چت رد شد.");
-	EditMessageText($chatid,$message_id_call,"<i>🔴چت رد شد.</i>",'html','true');
-	SendMessage($rep,"🔴 متاسفانه درخواست چت رد شد.","html","true");
-	}
-	//============
-	elseif($data == "block chat"){
-	$rep = strchr($text_call,"ID:");
-	$rep = str_replace("ID: ",'',$rep);
-	$txxt = file_get_contents('other/access/Block-List.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($rep,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Block-List.txt');
-      $aaddd .= $rep."\n";
-		file_put_contents('other/access/Block-List.txt',$aaddd);
-    }
-	AnswerCallbackQuery($data_id,"🚫شخص مورد نظر بلاک شد.");
-	EditMessageText($chatid,$message_id_call,"<i>🚫بلاک شد.</i>",'html','true');
-	SendMessage($rep,"🚫 شما از ربات بلاک شدید.","html","true");
-	}
-	//============
-	elseif($pm_resani != "⛔️" and $from_id != $admin and $type == "private"){
-	if($_feed == null){
-	ForwardMessage($admin,$chat_id,$message_id);
-	}else{
-	ForwardMessage($_feed,$chat_id,$message_id);	
-	}
-		
-	SendMessage($chat_id,$_send,"html","true",$button_dokme_ha);
-	}
-	//============
-	elseif (strpos($chat , "$from_id") !== false and $type == "private" and $from_id != $admin) {
-	if($_feed == null){
-	ForwardMessage($admin,$chat_id,$message_id);
-	}else{
-	ForwardMessage($_feed,$chat_id,$message_id);
-	}
-	
-	SendMessage($chat_id,$_send,"html","true",$button_dokme_ha);
-	}
-	//============
-	elseif($pm_resani == "⛔️" && $type == "private" && $from_id != $admin){
-		if($username == null){
-		$username = 'None';
-		}else{
-		$username = "@$username";
-		}
-		if($_feed == null){
-		SendMessage($admin,"<b> 📪 Request Chat</b>
-		<code>Forward 👇</code>
-		<code>------------------------------</code>
-		<b>First:</b> $first
-		<b>UserName:</b> $username
-		<b>ID:</b> $from_id","html","true",$button_request);
-		ForwardMessage($admin,$chat_id,$message_id);
-		}else{
-		SendMessage($_feed,"<b> 📪 Request Chat</b>
-		<code>Forward 👇</code>
-		<code>------------------------------</code>
-		<b>First:</b> $first
-		<b>UserName:</b> $username
-		<b>ID:</b> $from_id","html","true",$button_request);
-		ForwardMessage($_feed,$chat_id,$message_id);
-		}
-		
-		SendMessage($chat_id,"✅درخواست چت ارسال شد.صبر کنید تا قبول شود.","html","true",$button_dokme_ha);
-	}
-	//==============
-	elseif(preg_match('/^\/([Ss][Ee][Tt][Ff][Ee][Ee][Dd])/',$text) and $from_id == $admin and $bot_type == 'gold'){
-	if($type != "private"){
-	save("other/setting/feed.txt",$chat_id);
-	
-	SendMessage($chat_id,"✅این گروه برای پشتیبانی تنظیم شد.","html","true");
-	}else{
-	
-	SendMessage($chat_id,"🚫دستور فقط برای گروه میباشد.","html","true");
-	}
-	}
-	elseif(preg_match('/^\/([Dd][Ee][Ll][Ff][Ee][Ee][Dd])/',$text) and $from_id == $admin and $bot_type == 'gold'){
-	if($type == "private"){
-	unlink("other/setting/feed.txt");
-	
-	SendMessage($chat_id,"✅از این پس پیام ها به ادمین ارسال میشن.","html","true");
-	}else{
-	
-	SendMessage($chat_id,"🚫دستور فقط برای پی وی بات میباشد.","html","true");
-	}
-	}
-	//==============
-	elseif($reply == null and $type == 'private'){
-	
-	SendMessage($chat_id,"❌دستور نامشخص...","html","true");
-	}
-	//============
-	elseif($reply == null and $type != 'private'){
-return false;
+elseif($data == "b"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"یه ",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"ab"]
+              ]
+              ]
+        ])
+ ]);
 }
-	//============
-	elseif($reply != null && $text == '/ban' and $from_id == $admin || strpos($adminlist , "$from_id") !== false){
-	$txxt = file_get_contents('other/access/Block-List.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($reply,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Block-List.txt');
-      $aaddd .= $reply."\n";
-		file_put_contents('other/access/Block-List.txt',$aaddd);
-    }
-	
-	SendMessage($chat_id,"🚫 کاربر مورد نظر بلاک شد.","html","true");
-	SendMessage($reply,"🚫 شما بلاک شدین.","html","true");
+	elseif($data == "zaman"){
+    
+    bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"🔻تاریخ و زمان به وقت ایران🔺",
+ 
+ 'parse_mode'=>"MarkDown",
+	'reply_markup'=>json_encode([
+	'resize_keyboard'=>true,
+	'inline_keyboard'=>[
+[
+['text'=>"⏳تاریخ امروز⌛️",'callback_data'=>"en"],['text'=>"$l",'callback_data'=>"bio"]
+],
+[
+['text'=>"⏰ساعت⏰",'callback_data'=>"en"],['text'=>"$h",'callback_data'=>"bio"]
+],
+[
+['text'=>"🍃روز هفته🍃",'callback_data'=>"en"],['text'=>"$hafte",'callback_data'=>"bio"]
+],
+[
+['text'=>"🐻حیوان سال🐽",'callback_data'=>"en"],['text'=>"$m",'callback_data'=>"bio"]
+],
+[
+['text'=>"🍂فصل🍁",'callback_data'=>"en"],['text'=>"$fasl",'callback_data'=>"bio"]
+],
+[
+['text'=>"🌝ماه🌜",'callback_data'=>"en"],['text'=>"$mo",'callback_data'=>"bio"]
+],
+[
+['text'=>"🌞روز های باقیمانده از سال🌞",'callback_data'=>"en"],['text'=>"$q",'callback_data'=>"bio"]
+],
+	]
+	])
+	]);
 	}
-	//==============
-	elseif($reply != null && $text == '/unban' and $from_id == $admin || strpos($adminlist , "$from_id") !== false){
-	$rep = str_replace("$reply\n",'',$block);
-	save("other/access/Block-List.txt",$rep);
-	
-	SendMessage($chat_id,"✅کاربر مورد نظر آنبلاک شد.","html","true");
-	SendMessage($reply,"✅شما آنبلاک شدین.","html","true");
-	}
-	//==============
-	elseif($reply != null && $text == '/share' and $from_id == $admin){
-	if($_cname == null){
-	
-	SendMessage($chat_id,"<i>❌شماره شما ثبت نشده.</i>","html","true");
-	}else{
-	SendContact($reply,$_cname,$_number);
-	SendMessage($chat_id,"✅شماره شما ارسال شد.","html","true");
-	}
-	}
-	//==============
-	elseif($reply != null && $from_id == $admin || strpos($adminlist , "$from_id") !== false){
-	if($pm_forward == "✅"){
-	ForwardMessage($reply,$chat_id,$message_id);
-	}
-	elseif($sticker_id != null){
-	SendSticker($reply,$sticker_id);
-	}
-	elseif($video_id != null){
-	SendVideo($reply,$video_id,$caption);
-	}
-	elseif($voice_id != null){
-	SendVoice($reply,$voice_id,'',$caption);
-	}
-	elseif($file_id != null){
-	SendDocument($reply,$file_id,'',$caption);
-	}
-	elseif($music_id != null){
-	SendAudio($reply,$music_id,'',$caption);
-	}
-	elseif($photo2_id != null){
-	SendPhoto($reply,$photo2_id,'',$caption);
-	}
-	elseif($photo1_id != null){
-	SendPhoto($reply,$photo1_id,'',$caption);
-	}
-	elseif($photo0_id != null){
-	SendPhoto($reply,$photo0_id,'',$caption);
-	}
-	elseif($text != null){
-	SendMessage($reply,$text,"html","true");
-	}
-	
-	SendMessage($chat_id,"📪پیام مورد نظر ارسال شد","html","true");
-	}
-	
-	
-	// Add User
-unlink("error_log");
-$txxt = file_get_contents('other/access/Group.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($chat_id,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Group.txt');
-      $aaddd .= $chat_id."\n";
-	  if ($chat_id != $from_id){
-		file_put_contents('other/access/Group.txt',$aaddd);
-	  }
-    }
-$txxt = file_get_contents('other/access/Member.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($chat_id,$pmembersid)){
-      $aaddd = file_get_contents('other/access/Member.txt');
-      $aaddd .= $chat_id."\n";
-	  if ($chat_id == $from_id){
-		file_put_contents('other/access/Member.txt',$aaddd);
-	  }
-    }
-	$txxt = file_get_contents('administrative/access/Member-All-Bot.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array($chat_id,$pmembersid)){
-      $aaddd = file_get_contents('administrative/access/Member-All-Bot.txt');
-      $aaddd .= $chat_id."\n";
-	  if ($chat_id == $from_id){
-		file_put_contents('administrative/access/Member-All-Bot.txt',$aaddd);
-	  }
-    }
-	$txxt = file_get_contents('other/access/UserName.txt');
-    $pmembersid= explode("\n",$txxt);
-    if (!in_array("@".$username,$pmembersid)){
-      $aaddd = file_get_contents('other/access/UserName.txt');
-      $aaddd .= "@".$username."\n";
-	  if ($username != null){
-		file_put_contents('other/access/UserName.txt',$aaddd);
-	  }
-    }
-      unlink("error_log");
+elseif($data == "insta1"){
+    file_put_contents("ali.txt","insta1");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"لینک اینستاگرام بفرس",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"ab"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($ali == "insta1"){
+    file_put_contents("ali.txt","No");
+    $alba = $message->text;
+    
+    $get = json_decode(file_get_contents("https://api.sssgram.com/st-tik/ins/dl?url=$alba"));
+ $result = objectToArrays($get, true);
+    $in6 = $result['result']['insBos'][0]['url'];
+    $in7 = $result['result']['insBos'][0]['type'];
+    $in8 = $result['result']['insBos'][0]['author'];
 
-?>
+    $in10 = $result['result']['insBos'][0]['desc'];
+    if ($in7 == 'mp4') {
+  bot('sendvideo',[
+ 'chat_id'=>$chat_id,
+ 'video'=>"$in6",
+ 'caption'=>"
+ $in8
 
 
+ $in10
+
+==================
+@SaviorisGod_bot"]);
+
+ if ($in7 == 'jpg') {
+  bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$in6",
+ 'caption'=>
+  "$in8
+  $in10
 
 
+==================
+@SaviorisGod_bot"]);
+}
+}
+}
+elseif($data == "insta2"){
+    file_put_contents("ali.txt","insta2");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"لینک اینستاگرام بفرس",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht
+ ]);
+}
+elseif($ali == "insta2"){
+    file_put_contents("ali.txt","No");
+
+$abi = $message->text;
+$get = json_decode(file_get_contents("https://api.hajiapi.tk/instapost?url=$abi"));
+$result = objectToArrays($get, true);
+ $ala1 = $result['result']['mp4']['url']['0']['url'];
+ $ala2 = $result['result']['mp4']['meta']['title'];
+ $ala3 = $result['result']['mp4']['thumb'];
+ $ala4 = $result['result']['MP3'];
+
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$ala3",
+ 'caption'=>"💎 تصویر پست 💎
+===================
+⁦✳️⁩@SaviorisGod_bot⁦✳️⁩"]);
+ bot('sendaudio',[
+ 'chat_id'=>$chat_id,
+ 'audio'=>"$ala4",
+ 'caption'=>"⁦✔️⁩فایل mp3 مربوط به پست مورد نظر⁦
+=================
+⁦✳️⁩ @SaviorisGod_bot ✳️⁩"]);
+  bot('sendvideo',[
+ 'chat_id'=>$chat_id,
+ 'video'=>"$ala1",
+ 'caption'=>"
+
+$ala2
+==============
+⁦✳️⁩@SaviorisGod_bot⁦ ✳️⁩"]);
+}
+elseif($data == "tabdilgar"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیل گر خوش امدید
+ خوب من اماده هستم میخوای کدوم بخش بریم",
+ 'parse_mode'=>"MarkDown",
+'reply_markup'=>json_encode([
+ 'inline_keyboard'=>[
+[['text'=>"تبدیلگر عکس🖼",'callback_data'=>"c"],['text'=>"تبدیلگر  فیلم🎥",'callback_data'=>"d"]],
+ [['text'=>"تبدیلگر  آهنگ🎧",'callback_data'=>"e"],['text'=>"تبدیلگر  متن📠",'callback_data'=>"g"]]]])
+ ]);
+}
+elseif($data == "ab"){
+    bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+    'text' =>"سلام کاربر عزیز👋
+
+به ربات خودتون خوش اومدین",
+  'parse_mode'=>$mode,
+ 'reply_markup'=>$abzar]);
+      
+}
+elseif($data == "back"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیل گر خوش امدید
+
+ خوب من اماده هستم میخوای کدوم بخش بریم",
+ 'parse_mode'=>"MarkDown",
+'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"تبدیلگر عکس🖼",'callback_data'=>"c"],['text'=>"تبدیلگر  فیلم🎥",'callback_data'=>"d"]
+              ],
+              [
+              ['text'=>"تبدیلگر  آهنگ🎧",'callback_data'=>"e"],['text'=>"تبدیلگر  متن📠",'callback_data'=>"g"]
+              ]
+              ]
+        ])
+ ]);
+}
+
+//====================Photo======================//
+elseif($data == "c"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر عکس🖼 خوش امدید
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+     'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+            ['text'=>"تبدیل‌عکس‌به‌فایل💾",'callback_data'=>"c1"],['text'=>"تبدیل‌فایل‌به‌عکس🖼",'callback_data'=>"c2"]
+            ],
+             [
+            ['text'=>"تبدیل‌استیکر‌به‌عکس🌇",'callback_data'=>"c3"],['text'=>"تبدیل‌عکس‌به‌استیکر🎡",'callback_data'=>"c4"]
+            ],
+             [
+            ['text'=>"تبدیل استیکر به فایل💾",'callback_data'=>"c5"],['text'=>"تبدیل‌فایل‌به‌استیکر🎡",'callback_data'=>"c6"]],
+ [['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "back2"){
+bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر عکس🖼 خوش امدید😃
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون😊",
+ 'parse_mode'=>"MarkDown",
+     'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+            ['text'=>"تبدیل‌عکس‌به‌فایل💾",'callback_data'=>"c1"],['text'=>"تبدیل‌فایل‌به‌عکس🖼",'callback_data'=>"c2"]
+            ],
+             [
+            ['text'=>"تبدیل‌استیکر‌به‌عکس🌇",'callback_data'=>"c3"],['text'=>"تبدیل‌عکس‌به‌استیکر🎡",'callback_data'=>"c4"]
+            ],
+             [
+            ['text'=>"تبدیل استیکر به فایل💾",'callback_data'=>"c5"],['text'=>"تبدیل‌فایل‌به‌استیکر🎡",'callback_data'=>"c6"]
+            ],
+            [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c1"){
+file_put_contents("ali.txt","c1");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"خوب کاربر عزیز عکس خودتون را بفرستید تا تبدیل به فایلش کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c2"){
+file_put_contents("ali.txt","c2");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"خوب کاربر عزیز فایل خودتون را بفرستید تا تبدیل به عکسش کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c3"){
+file_put_contents("ali.txt","c3");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"خوب کاربر عزیز استیکر خودتون را بفرستید تا تبدیل به عکسش کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c4"){
+file_put_contents("ali.txt","c4");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"خوب کاربر عزیز عکس خودتون را بفرستید تا تبدیل به استیکر کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c5"){
+file_put_contents("ali.txt","c5");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز استیکر خودتون را بفرستید تا تبدیل به فایل png کنمش",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "c6"){
+file_put_contents("ali.txt","c6");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"خوب کاربر عزیز فایل png خودتون را بفرستید تا تبدیل به  استیکر کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back2"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($ali == "c1"){
+file_put_contents("ali.txt","No");
+$photo = $message->photo;
+$file = $photo[count($photo)-1]->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('senddocument',[
+ 'chat_id'=>$chat_id,
+ 'document'=>new CURLFile('tikapp.png'),
+ ]);
+}
+elseif($ali == "c2"){
+file_put_contents("ali.txt","No");
+$document = $message->document;
+$file = $document->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>new CURLFile('tikapp.png'),
+ ]);
+ }
+elseif($ali == "c3"){
+file_put_contents("ali.txt","No");
+$sticker = $message->sticker;
+$file = $sticker->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>new CURLFile('tikapp.png'),
+ ]);
+ }
+elseif($ali == "c4"){
+file_put_contents("ali.txt","No");
+$photo = $message->photo;
+$file = $photo[count($photo)-1]->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendsticker',[
+ 'chat_id'=>$chat_id,
+ 'sticker'=>new CURLFile('tikapp.png'),
+ ]);
+}
+elseif($ali == "c5"){
+file_put_contents("ali.txt","No");
+$sticker = $message->sticker;
+$file = $sticker->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('senddocument',[
+ 'chat_id'=>$chat_id,
+ 'document'=>new CURLFile('tikapp.png'),
+ ]);
+ }
+ elseif($ali == "c6"){
+ file_put_contents("ali.txt","No");
+$document = $message->document;
+$file = $document->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.png',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendsticker',[
+ 'chat_id'=>$chat_id,
+ 'sticker'=>new CURLFile('tikapp.png'),
+ ]);
+ }
+//====================video======================//
+elseif($data == "d"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر فیلم🎥 خوش امدید
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+       'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+            [
+            ['text'=>"تبدیل‌فیلم‌به‌آهنگ🎤",'callback_data'=>"d1"],['text'=>"تبدیل‌فیلم‌به‌گیف🎥",'callback_data'=>"d2"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "back3"){
+bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر فیلم🎥 خوش امدید
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+       'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+            [
+            ['text'=>"تبدیل‌فیلم‌به‌آهنگ🎤",'callback_data'=>"d1"],['text'=>"تبدیل‌فیلم‌به‌گیف🎥",'callback_data'=>"d2"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "d1"){
+file_put_contents("ali.txt","d1");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز فیلم خودتون را بفرستید تا تبدیل به  اهنگ کنمش🤓",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back3"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "d2"){
+file_put_contents("ali.txt","d2");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز فیلم خودتون را بفرستید تا تبدیل به  گیف کنمش🤓😉",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back3"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "d3"){
+file_put_contents("ali.txt","d3");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز فایل خودتون را بفرستید تا تبدیل به  فیلم بشه",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back3"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($ali == "d1"){
+ file_put_contents("ali.txt","No");
+$video = $message->video;
+$file = $video->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.mp3',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendaudio',[
+ 'chat_id'=>$chat_id,
+ 'audio'=>new CURLFile('tikapp.mp3'),
+ ]);
+ }
+ elseif($ali == "d2"){
+ file_put_contents("ali.txt","No");
+$video = $message->video;
+$file = $video->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.gif',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('senddocument',[
+ 'chat_id'=>$chat_id,
+ 'document'=>new CURLFile('tikapp.gif'),
+ ]);
+ }
+//====================audio======================//
+elseif($data == "e"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر آهنگ🎧 خوش امدید😃
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+       'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+            [
+            ['text'=>"تبدیل‌ویس‌به‌آهنگ🎤",'callback_data'=>"e1"],['text'=>"تبدیل‌آهنگ‌به‌ویس🎧",'callback_data'=>"e2"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "back4"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیلگر آهنگ🎧 خوش امدید😃
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+       'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+            [
+            ['text'=>"تبدیل‌ویس‌به‌آهنگ🎤",'callback_data'=>"e1"],['text'=>"تبدیل‌آهنگ‌به‌ویس🎧",'callback_data'=>"e2"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "e1"){
+file_put_contents("ali.txt","e1");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز ویس خودتون را بفرستید تا تبدیل به  آهنگ کنمش🤓",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back4"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "e2"){
+file_put_contents("ali.txt","e2");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز اهنگ خودتون را بفرستید تا تبدیل به  ویس کنمش🤓",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back4"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($ali == "e1"){
+ file_put_contents("ali.txt","No");
+$voice = $message->voice;
+$file = $voice->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.mp3',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendaudio',[
+ 'chat_id'=>$chat_id,
+ 'audio'=>new CURLFile('tikapp.mp3'),
+ ]);
+ }
+elseif($ali == "e2"){
+ file_put_contents("ali.txt","No");
+$audio = $message->audio;
+$file = $audio->file_id;
+      $get = bot('getfile',['file_id'=>$file]);
+      $patch = $get->result->file_path;
+      file_put_contents('tikapp.ogg',file_get_contents('https://api.telegram.org/file/bot'.$API_KEY.'/'.$patch));
+bot('sendvoice',[
+ 'chat_id'=>$chat_id,
+ 'voice'=>new CURLFile('tikapp.ogg'),
+ ]);
+ }
+//====================text======================//
+elseif($data == "g"){
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیل گر📠 خوش امدید
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+                        [
+            ['text'=>"تبدیل‌متن‌به‌استیکر🌇",'callback_data'=>"g1"],['text'=>"تبدیل‌متن‌به‌عکس🖼",'callback_data'=>"g2"]
+            ],            
+            [
+            ['text'=>"تبدیل‌متن‌به‌ویس🎤",'callback_data'=>"g3"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "back5"){
+bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"به بخش تبدیل گر📠 خوش امدید
+
+ابتدا یه بخش را انتخاب کنید تا بریم سراغ کارمون",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+                        [
+            ['text'=>"تبدیل‌متن‌به‌استیکر🌇",'callback_data'=>"g1"],['text'=>"تبدیل‌متن‌به‌عکس🖼",'callback_data'=>"g2"]
+            ],            
+            [
+            ['text'=>"تبدیل‌متن‌به‌ویس🎤",'callback_data'=>"g3"]
+            ],
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "g1"){
+file_put_contents("ali.txt","g1");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز متن خودتون را بفرستید تا به استیکر تبدیلش کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back5"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "g2"){
+file_put_contents("ali.txt","g2");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز متن خودتون را بفرستید تا تبدیل عکسش کنم",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back5"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($data == "g3"){
+file_put_contents("ali.txt","g3");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "خوب کاربر عزیز متن خودتون را بفرستید تا تبدیل به ویسش کنم 🙃
+ فقط کلمه های انگلیسی 
+ میتونید بصورت پینگلیش بفرستید 
+ مثلا : salam",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>json_encode([
+            'inline_keyboard'=>[
+              [
+              ['text'=>"برگشت◀️",'callback_data'=>"back5"]
+              ]
+              ]
+        ])
+ ]);
+}
+elseif($ali == "g1"){
+ file_put_contents("ali.txt","No");
+	$photo = file_get_contents('http://tikapp.000webhostapp.com/ml/?color=white&text='.urlencode($text));
+	file_put_contents('logo.png',$photo);
+bot('sendsticker',[
+ 'chat_id'=>$chat_id,
+ 'sticker'=>new CURLFile('logo.png'),
+ ]);
+ }
+elseif($ali == "g2"){
+ file_put_contents("ali.txt","No");
+	$photo = file_get_contents('http://tikapp.000webhostapp.com/ml/?color=white&text='.urlencode($text));
+	file_put_contents('logo.png',$photo);
+bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>new CURLFile('logo.png'),
+ ]);
+ }
+elseif($ali == "g3"){
+ file_put_contents("ali.txt","No");
+	$vo = file_get_contents('http://tts.baidu.com/text2audio?lan=en&ie=UTF-8&text='.urlencode($text));
+ file_put_contents('vo.ogg',$vo);
+ bot('sendvoice',[
+ 'chat_id'=>$chat_id,
+ 'voice'=>new CURLFile('vo.ogg'),
+ ]);
+ }
+ 
+ elseif($data == "yout"){
+file_put_contents("ali.txt","yout");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "لینک یوتیوب خود را ارسال کنید ",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht
+ ]);
+ }
+ 
+ elseif($ali == "yout"){
+file_put_contents("ali.txt","none");
+ 
+    $telli = $message->text;
+    $get = json_decode(file_get_contents("http://api.hajiapi.tk/youtube?url=$telli"));
+    $result = objectToArrays($get, true);
+    $al1 = $result['Result']['title'];
+    $al2 = $result['Result']['fquality'];
+    $al3 = $result['Result']['dlink'];
+    $al4 = $result['Result']['ftype'];
+    sendaction($chat_id,typing);
+bot ('sendvideo',[
+ 'chat_id'=>$chat_id,
+ 'video'=>"$al3",
+ 'caption'=>"
+کیفیت  : $al2
+
+
+عنوان  :  $al1
+
+
+نوع  :    $al4
+
+=========================
+@SaviorisGod_bot"]);
+}
+
+elseif($data == "vajeh"){
+    
+file_put_contents("ali.txt","vajeh");
+
+bot('sendmessage',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=>"⁦✴️⁩کلمه ی مورد نظر را ارسال کنید ⁦✴️⁩",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht
+ ]);
+ }
+ 
+ elseif($ali == "vajeh"){
+     file_put_contents("ali.txt","none");
+  $dsa = $message->text;
+    $get = file_get_contents("https://api.codebazan.ir/vajehyab/?text=$dsa");
+$result =json_decode($get,true);
+  
+
+$alam1 = $result['result']['motaradefmotezad'];
+$alam2 = $result['result']['fa'];
+$alam3 = $result['result']['mani'];
+$alam4 = $result['result']['Fmoein'];
+$alam5 = $result['result']['Fdehkhoda'];
+
+sendmessage($chat_id,"🌟 
+ 
+ 👈 کلمه : $alam2
+
+👈 معنی  : $alam3
+
+
+لغتنامه معین 👈  : $alam4
+
+
+
+ 👈 لغتنامه دهخدا : $alam5
+
+
+👈 مترادف / متضاد  : $alam1", "html","true"
+      
+ );
+}
+elseif($data == "ax"){
+file_put_contents("ali.txt","ax");
+bot('editmessagetext',[
+ 'chat_id'=>$chatid,
+  'message_id'=>$message_id,
+ 'text'=> "⁦✴️⁩کلمه ی مورد نظر را ارسال کنید ⁦✴️⁩",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht
+ ]);
+ }
+ 
+ elseif($ali == "ax"){
+file_put_contents("ali.txt","No");
+ $model = $message->text;
+    $get = json_decode(file_get_contents("http://haji-api.ir/wallpaper?search=$model&number=1"));
+
+$result = objectToArrays($get, true);
+$pho1 = $result['result']['0']['photo'];
+
+    $pho2 = $result['result']['2']['photo'];
+
+    $pho3 = $result['result']['3']['photo'];
+    $phona = $result['result']['4']['photo'];
+    $phob = $result['result']['5']['photo'];
+    $pho4 = $result['result']['6']['photo'];
+    $pho5 = $result['result']['7']['photo'];
+    $pho6 = $result['result']['8']['photo'];
+    $pho7 = $result['result']['9']['photo'];
+    $pho8 = $result['result']['10']['photo'];
+    $pho9 = $result['result']['11']['photo'];
+    $pho10 = $result['result']['12']['photo'];
+    $pho11 = $result['result']['13']['photo'];
+    $pho12 = $result['result']['14']['photo'];
+    $pho13 = $result['result']['15']['photo'];
+    sendaction($chat_id,typing);
+    
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho1"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho2"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho3"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho4"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho5"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho6"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho7"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho8"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho9"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho10"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho11"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho12"]);
+     
+ bot('sendphoto',[
+ 'chat_id'=>$chat_id,
+ 'photo'=>"$pho13",
+ 'parse_mode'=>"MarkDown",
+      'reply_markup'=>$bargasht
+ ]);
+}
+//====================Tikapp======================//
+
+   ?>
